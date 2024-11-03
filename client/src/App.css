@@ -32,6 +32,7 @@
 
 body {
   overflow-x: hidden;
+  background-color: #EFEFEF;
 }
 
 input {
@@ -73,6 +74,24 @@ button {
   gap: 20px;
 }
 
+.normal_flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  background-color: white;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 15px 20px;
+  flex-direction: row;
+  justify-content: space-around;
+  box-sizing: border-box;
+}
+
 .container {
   background-color: white;
   padding:30px;
@@ -81,7 +100,7 @@ button {
 }
 
 .logo {
-  height: 125px;
+  height:25px;
 }
 
 .title {
@@ -227,4 +246,16 @@ button {
 
 .none {
   display: none;
+}
+
+nav ul li {
+  display: inline;
+  margin-left: 40px;
+  list-style-type: none;
+  cursor: pointer;
+}
+
+.arrow {
+  height: 9px;
+  margin-left: 5px;
 }
