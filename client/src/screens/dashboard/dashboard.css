@@ -18,6 +18,9 @@
     background-color: white;
     height: 100%;
     border-radius: 10px;
+    justify-content: start;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 #topics {
@@ -26,4 +29,13 @@
 
 #practice {
     flex-grow: 1;
+}
+
+.search {
+    margin-left: -32px;
+    transform: scale(.9);
+}
+
+.search_text input {
+    padding-right: 40px;
 }

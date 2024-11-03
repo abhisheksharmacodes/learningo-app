@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import logo from '../../assets/images/logo1.png'
 import arrow from '../../assets/images/arrow.svg'
 import coin from '../../assets/images/coin.svg'
+import search from '../../assets/images/search.svg'
 
 import axios from 'axios'
 
@@ -45,13 +46,19 @@ const Dashboard = () => {
                     </ul>
                 </nav>
                 <div className="normal_flex">
-                    <img src={coin} alt="coin" style={{height:'35px',marginRight:'10px'}}/>
-                    57
+                    <img src={coin} alt="coin" style={{ height: '35px', marginRight: '10px' }} />
+                    0
                 </div>
             </header>
             <div className="normal_flex" id="content">
-                <section id="topics"></section>
-                <section id="practice"></section>
+                <section id="topics" className="flex">
+                    <span className="title">Topics</span>
+                    <div className="search_text" style={{display:'flex',width:'100%'}}>
+                        <input type="text" placeholder="Enter a topic and practice"/>
+                        <img src={search} alt="search" class="search"/>
+                    </div>
+                </section>
+                <section id="practice" className="flex"></section>
             </div>
         </div>
     </div>
