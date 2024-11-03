@@ -1,0 +1,17 @@
+.password_status {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.password_status div {
+    height: 2px;
+    width: 60px;
+    background-color: var(--gray);
+    border-radius: 50px;
+}
+
+.password_status .green_status {
+    background-color: var(--green);
+}

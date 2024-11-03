@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+
+  --normal_text: 11.5pt;
+
+  --trans: 0.4s;
+  --border-radius: 20px;
+
+  --opacity-normal-active: 0.94;
+  --opacity-hover: 1;
+
+  --red: rgb(255, 79, 79);
+  --green: rgb(57, 192, 84);
+  --gray: rgb(181, 181, 181);
+
+}
+
+* {
+  z-index: 100;
+  color: black;
+  font-family: inter;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  height: 100%;
+  display: flex; /* or display: grid; for layout flexibility */
+}
+
+body {
+  overflow-x: hidden;
+}
+
+input {
+  width: 100%;
+  border: 1px solid var(--gray);
+  padding: 5px 8px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 7px 8px;
+  width: 100%;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #015BA6 0%, #1B98FF 100%);
+  color: white;
+}
+
+.App {
+  text-align: center;
+}
+
+.screen {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.container {
+  background-color: white;
+  padding:30px;
+  border: 0.5px solid rgba(0, 0, 0, 0.283);
+  border-radius: 10px;
+}
+
+.logo {
+  height: 125px;
+}
+
+.title {
+  font-size: 15pt;
+}
+
+.hr {
+  width: 100%;
+  height: 1px;
+  background-color: var(--gray);
+}
+
+.error {
+  background-color: rgba(255, 77, 77, 0.527);
+}
+
+.info_text,
+.error_text,.link_text,
+.success_text {
+  font-size: 14px;
+  text-align: center;
+}
+
+.error_text {
+  color: var(--red);
+}
+
+.success_text {
+  color: var(--green)
+}
+
+.error:focus {
+  background-color: rgba(253, 36, 36, 0.2);
+}
+
+.text,
+.link_text {
+  font-size: var(--normal_text);
+  text-decoration: none;
+}
+
+.link_text {
+  cursor: pointer;
+}
+
+.link_text:active {
+  opacity: .9;
+}
+
+.icon_button {
+  background-color: rgba(255, 255, 255, .08);
+  display: flex;
+  padding: 10px 15px 10px 15px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.icon_button:hover {
+  background-color: rgba(255, 255, 255, .09);
+}
+
+.icon_button:active {
+  background-color: rgba(255, 255, 255, .08);
+}
+
+.fade_in {
+  animation-name: fade_in;
+  animation-duration: var(--trans);
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.fade_in_move {
+  animation-name: fade_in_move;
+  animation-duration: var(--trans);
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.fade_out {
+  animation-name: fade_out;
+  animation-duration: var(--trans);
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.fade_out_move {
+  animation-name: fade_out_move;
+  animation-duration: var(--trans);
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade_in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade_in_move {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+@keyframes fade_out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade_out_move {
+  from {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+}
+
+/* Test classes */
+
+.none {
+  display: none;
+}
