@@ -1,3 +1,29 @@
-#header {
-    
+#dash_container {
+    width: 100%;
+    height:100%;
+    gap:0;
+    justify-content: start;
+    align-items: start;
+}
+
+#content {
+    flex-grow:1;
+    width:100%;
+    box-sizing: border-box;
+    padding: 30px;
+    gap:30px;
+}
+
+#topics,#practice {
+    background-color: white;
+    height: 100%;
+    border-radius: 10px;
+}
+
+#topics {
+    width: 25%;
+}
+
+#practice {
+    flex-grow: 1;
 }

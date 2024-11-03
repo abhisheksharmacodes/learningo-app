@@ -22,8 +22,8 @@ const Dashboard = () => {
     }, [])
 
 
-    return <div id="auth_screen" className="screen normal_screen" style={{ height: '100%' }}>
-        <div id="container1" style={{ width: '100%', marginLeft: '0' }}>
+    return <div id="auth_screen" className="screen" style={{ height: '100%' }}>
+        <div id="dash_container" className="flex">
             <header className="flex header">
                 <img className="logo" src={logo} alt="logo" />
                 <nav>
@@ -49,8 +49,9 @@ const Dashboard = () => {
                     57
                 </div>
             </header>
-            <div id="content">
-                
+            <div className="normal_flex" id="content">
+                <section id="topics"></section>
+                <section id="practice"></section>
             </div>
         </div>
     </div>
