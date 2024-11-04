@@ -29,13 +29,120 @@
 
 #practice {
     flex-grow: 1;
+    padding: 20px 80px;
 }
 
 .search {
     margin-left: -32px;
-    transform: scale(.9);
+    margin-top: 8px;
+    height: 20px;
+    opacity: .8;
+    transition: .4s;
 }
 
 .search_text input {
     padding-right: 40px;
+}
+
+.search_text input:focus ~ .search {
+    opacity: 1;
+}
+
+#categories {
+    flex-direction: column;
+    width: 100%;
+    gap:10px;
+}
+
+.arrow {
+    height: 7px;
+}
+
+.accordion-item, .accordion-title {
+    width: 100%;
+}
+
+.accordion-title, #navigate {
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    padding:10px 20px;
+    width: 100%;
+}
+
+.accordion-title {
+    box-sizing: border-box;
+    background-color: var(--gray0);
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+}
+
+.accordion-content {
+    background-color: rgba(217, 217, 217, .2);
+    border-radius:0 0 8px 8px;
+    padding:10px 20px;
+}
+
+.accordion-content nav ul {
+    display: flex;
+    flex-direction: column;
+    gap:7px;
+}
+
+.accordion-content ul li {
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    color:var(--gray2);
+}
+
+.accordion-content ul li:hover {
+    color:var(--gray3);
+}
+
+#options {
+    width: 100%;
+    gap:15px
+}
+
+.option {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.normal {
+    background-color: var(--gray0);
+}
+
+.normal:hover {
+    background-color: var(--gray01);
+}
+
+.wrong_option {
+    background-color: rgba(255,27,27,.3);
+    border: 2px solid rgba(255,0,0,.35);
+}
+
+.right_option {
+    background-color: rgba(0,255,68,.3);
+    border: 2px solid rgba(4,168,47,.51);
+}
+
+#navigate {
+    padding: 0 100px;
+    box-sizing: border-box;
+    margin-top: 15px;
+}
+
+#navigate div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:7px;
+    cursor: pointer;
+    font-size: 18px;
 }

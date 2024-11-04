@@ -7,13 +7,21 @@
   --trans: 0.4s;
   --border-radius: 20px;
 
-  --opacity-normal-active: 0.94;
+  --opacity-normal-active: 0.96;
   --opacity-hover: 1;
 
   --red: rgb(255, 79, 79);
   --green: rgb(57, 192, 84);
-  --gray: rgb(181, 181, 181);
 
+  --gray0: rgba(217, 217, 217, .4);
+  --gray01: rgba(217, 217, 217, .6);
+  --gray: rgb(181, 181, 181);
+  --gray2: rgb(106, 106, 106);
+  --gray3: rgb(66, 66, 66);
+}
+
+::-webkit-scrollbar {
+  width: 0;
 }
 
 * {
@@ -23,14 +31,18 @@
   text-align: left;
   margin: 0;
   padding: 0;
+  font-weight: normal;
 }
 
 .App {
   height: 100%;
-  display: flex; /* or display: grid; for layout flexibility */
+  display: flex;
+  /* or display: grid; for layout flexibility */
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100vh;
   width: 100vw;
   background-color: #EFEFEF;
@@ -42,10 +54,12 @@ input {
   padding: 8px 12px;
   border-radius: 5px;
   box-sizing: border-box;
+  font-size: 15px;
 }
 
 input:focus {
-  border: 1px solid rgb(255, 15, 15);
+  outline: none;
+  border: 1px solid var(--gray2);
 }
 
 button {
@@ -56,6 +70,16 @@ button {
   border-radius: 5px;
   background: linear-gradient(90deg, #015BA6 0%, #1B98FF 100%);
   color: white;
+  cursor: pointer;
+  opacity: var(--opacity-normal-active);
+}
+
+button:hover {
+  opacity: var(--opacity-hover);
+}
+
+button:active {
+  opacity: var(--opacity-normal-active);
 }
 
 .App {
@@ -94,15 +118,29 @@ button {
   box-sizing: border-box;
 }
 
+.header nav ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+
+.header nav ul li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+
 .container {
   background-color: white;
-  padding:30px;
+  padding: 30px;
   border: 0.5px solid rgba(0, 0, 0, 0.283);
   border-radius: 10px;
 }
 
 .logo {
-  height:25px;
+  height: 25px;
 }
 
 .title {
@@ -120,7 +158,8 @@ button {
 }
 
 .info_text,
-.error_text,.link_text,
+.error_text,
+.link_text,
 .success_text {
   font-size: 14px;
   text-align: center;
@@ -255,9 +294,4 @@ nav ul li {
   margin-left: 40px;
   list-style-type: none;
   cursor: pointer;
-}
-
-.arrow {
-  height: 9px;
-  margin-left: 5px;
 }
