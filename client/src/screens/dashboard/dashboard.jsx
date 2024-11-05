@@ -1,18 +1,235 @@
-import { React, useState, useEffect } from "react"
+import { React, useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
+
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 import logo from '../../assets/images/logo1.png'
 import arrow from '../../assets/images/arrow.svg'
 import coin from '../../assets/images/coin.svg'
 import search from '../../assets/images/search.svg'
+import loading from '../../assets/images/loading.gif'
 
 import axios from 'axios'
 
 import '../../App.css'
 import './dashboard.css'
 
+const API_KEY = 'AIzaSyBLoGQC0Ly4xbc7AVBIcxqWeQ7Lm3scvoo'; // Assuming you've set the API key in .env
+
+const geminiConfig = {
+    temperature: 0.9,
+    topP: 1,
+    topK: 1,
+    maxOutputTokens: 4096,
+};
+
 const Dashboard = () => {
-    
+
+    const [response, setResponse] = useState(false);
+    const [que, setQue] = useState({ question: '', options: [], answer: '' })
+    const [core, setCore] = useState('Things students should do')
+    const [level, setLevel] = useState('Beginner')
+    const [ready,setReady] = useState(false)
+    const [askSomethingElse,setAskSomethingElse] = useState(false)
+
+    const topic = useRef(null)
+    const buttonRefs = useRef([]);
+
+    let answer = ''
+
+    const categories = [
+        {
+            name: "Computer Science", content: [
+                "Programming Fundamentals",
+                "Data Structures and Algorithms",
+                "Database Systems",
+                "Computer Networks",
+                "Operating Systems",
+                "Software Engineering",
+                "Artificial Intelligence",
+                "Machine Learning",
+                "Web Development",
+                "Cybersecurity"
+            ]
+        },
+        {
+            name: "Agriculture", content: [
+                "Soil Science",
+                "Crop Production",
+                "Plant Physiology",
+                "Animal Husbandry",
+                "Agricultural Economics",
+                "Agricultural Engineering",
+                "Agronomy",
+                "Horticulture",
+                "Plant Pathology",
+                "Entomology"
+            ]
+        },
+        {
+            name: "Electrical Engineering", content: [
+                "Circuit Theory",
+                "Electromagnetic Fields",
+                "Control Systems",
+                "Power Systems",
+                "Digital Electronics",
+                "Analog Electronics",
+                "Microprocessors",
+                "Power Electronics",
+                "Signal Processing",
+                "Electrical Machines"
+            ]
+        },
+        {
+            name: "Mechanical Engineering", content: [
+                "Engineering Mechanics",
+                "Thermodynamics",
+                "Fluid Mechanics",
+                "Machine Design",
+                "Manufacturing Processes",
+                "Thermal Engineering",
+                "Dynamics of Machines",
+                "Mechatronics",
+                "Automobile Engineering",
+                "Industrial Engineering"
+            ]
+        },
+        {
+            name: "Civil Engineering", content: [
+                "Structural Analysis",
+                "Soil Mechanics",
+                "Concrete Technology",
+                "Geotechnical Engineering",
+                "Transportation Engineering",
+                "Water Resources Engineering",
+                "Environmental Engineering",
+                "Surveying",
+                "Construction Management",
+                "Structural Design"
+            ]
+        },
+        {
+            name: "Chemical Engineering", content: [
+                "Mass Transfer Operations",
+                "Heat Transfer Operations",
+                "Chemical Reaction Engineering",
+                "Process Control",
+                "Fluid Mechanics",
+                "Thermodynamics",
+                "Transport Phenomena",
+                "Process Design and Simulation",
+                "Materials Science and Engineering",
+                "Biochemical Engineering"
+            ]
+        },
+        {
+            name: "Biotechnology", content: [
+                "Molecular Biology",
+                "Genetics",
+                "Biochemistry",
+                "Cell Biology",
+                "Microbial Biotechnology",
+                "Plant Biotechnology",
+                "Animal Biotechnology",
+                "Bioinformatics",
+                "Bioprocess Engineering",
+                "Immunology"
+            ]
+        },
+        {
+            name: "Mathematics", content: [
+                "Calculus",
+                "Linear Algebra",
+                "Differential Equations",
+                "Discrete Mathematics",
+                "Probability and Statistics",
+                "Number Theory",
+                "Topology",
+                "Real Analysis",
+                "Complex Analysis",
+                "Numerical Analysis"
+            ]
+        },
+        {
+            name: "Physics", content: [
+                "Mechanics",
+                "Electromagnetism",
+                "Optics",
+                "Quantum Mechanics",
+                "Thermodynamics",
+                "Solid State Physics",
+                "Nuclear Physics",
+                "Atomic Physics",
+                "Classical Mechanics",
+                "Relativity"
+            ]
+        },
+        {
+            name: "Economics", content: [
+                "Microeconomics",
+                "Macroeconomics",
+                "Econometrics",
+                "International Economics",
+                "Development Economics",
+                "Financial Economics",
+                "Public Economics",
+                "Behavioral Economics",
+                "Environmental Economics",
+                "Health Economics"
+            ]
+        }
+    ]
+
+    let accordionData = []
+
+    for (let i = 0; i < categories.length; i++) {
+        accordionData.push(
+            {
+                title: categories[i].name,
+                content: <nav><ul>{categories[i].content.map(item => <li onClick={() => { setCore(item); generate();topic.current.value="" }}>{item}</li>)}</ul></nav>
+            }
+        )
+    }
+
+    const generate = async () => {
+        setAskSomethingElse(false)
+        setReady(false)
+        setResponse(false)
+        setQue({ question: '', options: [], answer: '' })
+        try {
+            const googleAI = new GoogleGenerativeAI(API_KEY)
+            const geminiModel = googleAI.getGenerativeModel({
+                model: "gemini-pro",
+                geminiConfig,
+            });
+
+            const prompt = `ask a ${level} level question about ${core}. if no question can be generated about ${core} just return 'false' otherwise provide four options. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of strings only. the answer should exactly match letter by letter with one of the options. then only output the validate json string.`;
+            const result = await geminiModel.generateContent(prompt);
+            const responseText = result.response.text();
+            console.log(responseText)      
+            if (responseText==='false') {
+                setAskSomethingElse(true)
+                setReady(true)
+            } else {
+                setQue(JSON.parse(responseText))
+                setReady(true)
+                answer = que.answer
+                setResponse(true)
+            }
+
+        } catch (error) {
+            console.error("response error", error);
+        }
+    };
+
+    const handleAnswerClick = (option) => {
+        if (option === que.answer) {
+            buttonRefs.current[option].className = 'option right_option';
+        } else {
+            buttonRefs.current[option].className = 'option wrong_option';
+        }
+    };
+
     let navigate = useNavigate()
     let checkStatus = () => {
         if (!localStorage.getItem('id'))
@@ -21,6 +238,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         checkStatus()
+        generate()
     }, [])
 
     const Accordion = ({ title, content }) => {
@@ -35,50 +253,6 @@ const Dashboard = () => {
             </div>
         );
     };
-
-    const accordionData = [
-        {
-            title: "Computer Science",
-            content: <nav><ul><li>Programming Fundamentals</li><li>Data Structures and Algorithms</li><li>Database Systems</li><li>Computer Networks</li><li>Operating Systems</li><li>Software Engineering</li><li>Artificial Intelligence</li><li>Machine Learning</li><li>Web Development</li><li>Cybersecurity</li></ul></nav>
-        },
-        {
-            title: "Agriculture",
-            content: <nav><ul><li>Soil Science</li><li>Crop Production</li><li>Plant Physiology</li><li>Animal Husbandry</li><li>Agricultural Economics</li><li>Agricultural Engineering</li><li>Agronomy</li><li>Horticulture</li><li>Plant Pathology</li><li>Entomology</li></ul></nav>
-        },
-        {
-            title: "Electrical Engineering",
-            content: <nav><ul><li>Circuit Theory</li><li>Electromagnetic Fields</li><li>Control Systems</li><li>Power Systems</li><li>Digital Electronics</li><li>Analog Electronics</li><li>Microprocessors</li><li>Power Electronics</li><li>Signal Processing</li><li>Electrical Machines</li></ul></nav>
-        },
-        {
-            title: "Mechanical Engineering",
-            content: <nav><ul><li>Engineering Mechanics</li><li>Thermodynamics</li><li>Fluid Mechanics</li><li>Machine Design</li><li>Manufacturing Processes</li><li>Thermal Engineering</li><li>Dynamics of Machines</li><li>Mechatronics</li><li>Automobile Engineering</li><li>Industrial Engineering</li></ul></nav>
-        },
-        {
-            title: "Civil Engineering",
-            content: <nav><ul><li>Structural Analysis</li><li>Soil Mechanics</li><li>Concrete Technology</li><li>Geotechnical Engineering</li><li>Transportation Engineering</li><li>Water Resources Engineering</li><li>Environmental Engineering</li><li>Surveying</li><li>Construction
-                Management</li><li>Structural Design</li></ul></nav>
-        },
-        {
-            title: "Chemical Engineering",
-            content: <nav><ul><li>Mass Transfer Operations</li><li>Heat Transfer Operations</li><li>Chemical Reaction Engineering</li><li>Process Control</li><li>Fluid Mechanics</li><li>Thermodynamics</li><li>Transport Phenomena</li><li>Process Design and Simulation</li><li>Materials Science and Engineering</li><li>Biochemical Engineering</li></ul></nav>
-        },
-        {
-            title: "Biotechnology",
-            content: <nav><ul><li>Molecular Biology</li><li>Genetics</li><li>Biochemistry</li><li>Cell Biology</li><li>Microbial Biotechnology</li><li>Plant Biotechnology</li><li>Animal Biotechnology</li><li>Bioinformatics</li><li>Bioprocess Engineering</li><li>Immunology</li></ul></nav>
-        },
-        {
-            title: "Mathematics",
-            content: <nav><ul><li>Calculus</li><li>Linear Algebra</li><li>Differential Equations</li><li>Discrete Mathematics</li><li>Probability and Statistics</li><li>Number Theory</li><li>Topology</li><li>Real Analysis</li><li>Complex Analysis</li><li>Numerical Analysis</li></ul></nav>
-        },
-        {
-            title: "Physics",
-            content: <nav><ul><li>Mechanics</li><li>Electromagnetism</li><li>Optics</li><li>Quantum Mechanics</li><li>Thermodynamics</li><li>Solid State Physics</li><li>Nuclear Physics</li><li>Atomic Physics</li><li>Classical Mechanics</li><li>Relativity</li></ul></nav>
-        },
-        {
-            title: "Economics",
-            content: <nav><ul><li>Microeconomics</li><li>Macroeconomics</li><li>Econometrics</li><li>International Economics</li><li>Development Economics</li><li>Financial Economics</li><li>Public Economics</li><li>Behavioral Economics</li><li>Environmental Economics</li><li>Health Economics</li></ul></nav>
-        }
-    ];
 
     return <div id="auth_screen" className="screen" style={{ height: '100%' }}>
         <div id="dash_container" className="flex">
@@ -111,7 +285,8 @@ const Dashboard = () => {
                 <section id="topics" className="flex">
                     <span className="title">Topics</span>
                     <div className="search_text" style={{ display: 'flex', width: '100%' }}>
-                        <input type="text" maxLength={70} placeholder="Enter a topic and practice" />
+                        {/* <button onClick={generate}>generate</button> */}
+                        <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { setCore(topic.current.value);generate() }}} type="text" maxLength={70} placeholder="Enter a topic and practice" />
                         <img src={search} alt="search" class="search" />
                     </div>
                     <div className="normal_flex" id="categories">
@@ -121,24 +296,24 @@ const Dashboard = () => {
                     </div>
                 </section>
                 <section id="practice" className="flex">
-                    <span className="title">Practice</span>
-                    <h1>Which of the following is the smallest unit of matter?</h1>
+                    <div className="flex" style={{ gap: '10px' }}>
+                        <span className="title">Practice</span>
+                        <span className="title" style={{ opacity: '.7', display: 'block' }}>{core}</span>
+                    </div>
+                    {ready ? (askSomethingElse ? <span className="title">Ask something else</span> : <><h1 style={{ textAlign: 'center' }}>{que.question}</h1>
                     <div id="options" className="flex">
-                        <div className="option normal">Atom</div>
-                        <div className="option wrong_option">Proton</div>
-                        <div className="option right_option">Quark</div>
-                        <div className="option normal">Electron</div>
+                         {que.options.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => handleAnswerClick(option)} className='option normal'>{option}</div>)}
                     </div>
                     <div id="navigate">
                         <div>
                             <img className="arrow" src={arrow} style={{ transform: 'rotate(90deg)' }} alt="arrow" />
-                             Previous
+                            Previous
                         </div>
-                        <div>
+                        <div onClick={generate}>
                             Next
                             <img className="arrow" src={arrow} style={{ transform: 'rotate(-90deg)' }} alt="arrow" />
                         </div>
-                    </div>
+                    </div></>) : <div id="loading_div" className="flex"><img id="loading" src={loading} /></div>}
                 </section>
             </div>
         </div>

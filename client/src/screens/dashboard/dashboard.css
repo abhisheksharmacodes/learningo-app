@@ -28,8 +28,8 @@
 }
 
 #practice {
-    flex-grow: 1;
     padding: 20px 80px;
+    width: 75%;
 }
 
 .search {
@@ -112,6 +112,7 @@
     box-sizing: border-box;
     border-radius: 10px;
     cursor: pointer;
+    border: 2px solid var(--gray0);
 }
 
 .normal {
@@ -145,4 +146,14 @@
     gap:7px;
     cursor: pointer;
     font-size: 18px;
+}
+
+#loading_div {
+    flex-grow: 1;
+}
+
+#loading {
+    height: 125px;
+    filter: grayscale(.7);
+    opacity: .4;
 }

@@ -147,6 +147,10 @@ button:active {
   font-size: 15pt;
 }
 
+.title::first-letter {
+  text-transform: capitalize;
+}
+
 .hr {
   width: 100%;
   height: 1px;
