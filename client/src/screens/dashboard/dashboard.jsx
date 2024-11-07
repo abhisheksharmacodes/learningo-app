@@ -28,7 +28,7 @@ const Dashboard = () => {
     const [response, setResponse] = useState(false);
     const [que, setQue] = useState({ question: '', options: [], answer: '' })
     const [core, setCore] = useState('Things students should do')
-    const [level, setLevel] = useState('Beginner')
+    const [level, setLevel] = useState('Advanced')
     const [ready,setReady] = useState(false)
     const [askSomethingElse,setAskSomethingElse] = useState(false)
 
@@ -203,7 +203,7 @@ const Dashboard = () => {
                 geminiConfig,
             });
 
-            const prompt = `ask a ${level} level question about ${core}. if no question can be generated about ${core} just return 'false' otherwise provide four options. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of strings only. the answer should exactly match letter by letter with one of the options. then only output the validate json string.`;
+            const prompt = `ask a ${level} level question about ${core} in hindi language. if no question can be generated about ${core} just return 'false' otherwise provide four options. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of strings only. the answer should exactly match letter by letter with one of the options. then only output the validate json string.`;
             const result = await geminiModel.generateContent(prompt);
             const responseText = result.response.text();
             console.log(responseText)      
@@ -227,6 +227,10 @@ const Dashboard = () => {
             buttonRefs.current[option].className = 'option right_option';
         } else {
             buttonRefs.current[option].className = 'option wrong_option';
+            buttonRefs.current[que.answer].className = 'option right_option'
+            for (let i=0; i<que.options;i++) {
+                buttonRefs.current[que.options[i]].disabled = true
+            }
         }
     };
 
