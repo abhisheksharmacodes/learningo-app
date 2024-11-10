@@ -25,12 +25,13 @@ const geminiConfig = {
 
 const Dashboard = () => {
 
-    const [response, setResponse] = useState(false);
-    const [que, setQue] = useState({ question: '', options: [], answer: '' })
-    const [core, setCore] = useState('Things students should do')
+    const [queue, setQueue] = useState([])
+    const [topics, setTopics] = useState('Computer')
     const [level, setLevel] = useState('Advanced')
     const [ready,setReady] = useState(false)
     const [askSomethingElse,setAskSomethingElse] = useState(false)
+    const [index,setIndex] = useState(0)
+    const [test,setTest] = useState([])
 
     const topic = useRef(null)
     const buttonRefs = useRef([]);
@@ -186,7 +187,7 @@ const Dashboard = () => {
         accordionData.push(
             {
                 title: categories[i].name,
-                content: <nav><ul>{categories[i].content.map(item => <li onClick={() => { setCore(item); generate();topic.current.value="" }}>{item}</li>)}</ul></nav>
+                content: <nav><ul>{categories[i].content.map(item => <li onClick={() => { setTopics(item); topic.current.value="" }}>{item}</li>)}</ul></nav>
             }
         )
     }
@@ -194,8 +195,6 @@ const Dashboard = () => {
     const generate = async () => {
         setAskSomethingElse(false)
         setReady(false)
-        setResponse(false)
-        setQue({ question: '', options: [], answer: '' })
         try {
             const googleAI = new GoogleGenerativeAI(API_KEY)
             const geminiModel = googleAI.getGenerativeModel({
@@ -203,18 +202,17 @@ const Dashboard = () => {
                 geminiConfig,
             });
 
-            const prompt = `ask a ${level} level question about ${core} in hindi language. if no question can be generated about ${core} just return 'false' otherwise provide four options. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of strings only. the answer should exactly match letter by letter with one of the options. then only output the validate json string.`;
+            const prompt = `output an array (enclosed in [ and ]) of 5 json strings (separated by commas) each representing a ${level} level question about ${topics} in hindi language. if no question can be generated about ${topics} just return 'false' otherwise output array of 5 json strings. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options. then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
             const result = await geminiModel.generateContent(prompt);
-            const responseText = result.response.text();
-            console.log(responseText)      
+            const responseText = JSON.parse(result.response.text())
+            console.log('response')
+            console.log(responseText)
             if (responseText==='false') {
                 setAskSomethingElse(true)
                 setReady(true)
-            } else {
-                setQue(JSON.parse(responseText))
+            } else {                
+                setTest(responseText)
                 setReady(true)
-                answer = que.answer
-                setResponse(true)
             }
 
         } catch (error) {
@@ -223,14 +221,11 @@ const Dashboard = () => {
     };
 
     const handleAnswerClick = (option) => {
-        if (option === que.answer) {
-            buttonRefs.current[option].className = 'option right_option';
+        if (option === answer) {
+            buttonRefs.current[option].className = 'option right_option'
         } else {
-            buttonRefs.current[option].className = 'option wrong_option';
-            buttonRefs.current[que.answer].className = 'option right_option'
-            for (let i=0; i<que.options;i++) {
-                buttonRefs.current[que.options[i]].disabled = true
-            }
+            buttonRefs.current[option].className = 'option wrong_option'
+            buttonRefs.current[answer].className = 'option right_option'
         }
     };
 
@@ -242,8 +237,26 @@ const Dashboard = () => {
 
     useEffect(() => {
         checkStatus()
-        generate()
     }, [])
+
+    useEffect(() => {
+        if (topics) {
+            generate();
+        }
+    }, [topics]);
+
+    useEffect(()=>{
+        console.log('test'+test)
+        setQueue(test)
+    },[test])
+
+    useEffect(()=>{
+        console.log(queue)
+    },[queue])
+
+    useEffect(()=>{
+        answer = queue[index]?.answer
+    },[index])
 
     const Accordion = ({ title, content }) => {
         const [isActive, setIsActive] = useState(false);
@@ -290,7 +303,7 @@ const Dashboard = () => {
                     <span className="title">Topics</span>
                     <div className="search_text" style={{ display: 'flex', width: '100%' }}>
                         {/* <button onClick={generate}>generate</button> */}
-                        <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { setCore(topic.current.value);generate() }}} type="text" maxLength={70} placeholder="Enter a topic and practice" />
+                        <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { setTopics(topic.current.value) }}} type="text" maxLength={70} placeholder="Enter a topic and practice" />
                         <img src={search} alt="search" class="search" />
                     </div>
                     <div className="normal_flex" id="categories">
@@ -302,18 +315,18 @@ const Dashboard = () => {
                 <section id="practice" className="flex">
                     <div className="flex" style={{ gap: '10px' }}>
                         <span className="title">Practice</span>
-                        <span className="title" style={{ opacity: '.7', display: 'block' }}>{core}</span>
+                        <span className="title" style={{ opacity: '.7', display: 'block' }}>{topics}</span>
                     </div>
-                    {ready ? (askSomethingElse ? <span className="title">Ask something else</span> : <><h1 style={{ textAlign: 'center' }}>{que.question}</h1>
+                    {ready ? (askSomethingElse ? <span className="title">Ask something else</span> : <><h1 style={{ textAlign: 'center' }}>{queue[index]?.question}</h1>
                     <div id="options" className="flex">
-                         {que.options.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => handleAnswerClick(option)} className='option normal'>{option}</div>)}
+                         {queue[index]?.options?.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => handleAnswerClick(option)} className='option normal'>{option}</div>)}
                     </div>
                     <div id="navigate">
-                        <div>
+                        <div onClick={()=>{setIndex(index-1)}}>
                             <img className="arrow" src={arrow} style={{ transform: 'rotate(90deg)' }} alt="arrow" />
                             Previous
                         </div>
-                        <div onClick={generate}>
+                        <div onClick={()=>setIndex(index+1)}>
                             Next
                             <img className="arrow" src={arrow} style={{ transform: 'rotate(-90deg)' }} alt="arrow" />
                         </div>

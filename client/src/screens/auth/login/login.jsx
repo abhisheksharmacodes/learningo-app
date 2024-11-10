@@ -75,6 +75,7 @@ const Login = () => {
             <div className="container_sections flex">
                 <Link to="/signup" className="link_text">Don't have an account?</Link>
             </div>
+            <span>Terms and conditions</span>
         </div>
     </div>
 }
