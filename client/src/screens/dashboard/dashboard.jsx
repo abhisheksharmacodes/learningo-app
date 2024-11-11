@@ -26,8 +26,8 @@ const geminiConfig = {
 const Dashboard = () => {
 
     const [queue, setQueue] = useState([])
-    const [topics, setTopics] = useState('Computer')
-    const [level, setLevel] = useState('Advanced')
+    const [topics, setTopics] = useState('Pedagogy')
+    const [level, setLevel] = useState('Beginner')
     const [ready,setReady] = useState(false)
     const [askSomethingElse,setAskSomethingElse] = useState(false)
     const [index,setIndex] = useState(0)
@@ -195,6 +195,7 @@ const Dashboard = () => {
     const generate = async () => {
         setAskSomethingElse(false)
         setReady(false)
+        setIndex(0)
         try {
             const googleAI = new GoogleGenerativeAI(API_KEY)
             const geminiModel = googleAI.getGenerativeModel({
@@ -202,7 +203,7 @@ const Dashboard = () => {
                 geminiConfig,
             });
 
-            const prompt = `output an array (enclosed in [ and ]) of 5 json strings (separated by commas) each representing a ${level} level question about ${topics} in hindi language. if no question can be generated about ${topics} just return 'false' otherwise output array of 5 json strings. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options. then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
+            const prompt = `output an array (enclosed in [ and ]. don't put '\`' sign anywhere) of 5 valid json strings (separated by commas) each representing a ${level} level question about ${topics} in hindi language. if no question can be generated about ${topics} just return 'false' otherwise output array of 5 json strings. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options. then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
             const result = await geminiModel.generateContent(prompt);
             const responseText = JSON.parse(result.response.text())
             console.log('response')
@@ -217,6 +218,7 @@ const Dashboard = () => {
 
         } catch (error) {
             console.error("response error", error);
+            generate()
         }
     };
 
@@ -251,12 +253,16 @@ const Dashboard = () => {
     },[test])
 
     useEffect(()=>{
-        console.log(queue)
+        console.log('queue'+queue)
     },[queue])
 
     useEffect(()=>{
         answer = queue[index]?.answer
+        console.log(answer)
     },[index])
+    useEffect(()=>{
+        console.log('ask : ' + askSomethingElse)
+    },[askSomethingElse])
 
     const Accordion = ({ title, content }) => {
         const [isActive, setIsActive] = useState(false);
@@ -326,7 +332,7 @@ const Dashboard = () => {
                             <img className="arrow" src={arrow} style={{ transform: 'rotate(90deg)' }} alt="arrow" />
                             Previous
                         </div>
-                        <div onClick={()=>setIndex(index+1)}>
+                        <div onClick={()=>{if(index==queue.length-1){generate()}else{setIndex(index+1)}}}>
                             Next
                             <img className="arrow" src={arrow} style={{ transform: 'rotate(-90deg)' }} alt="arrow" />
                         </div>
