@@ -28,10 +28,13 @@ const Dashboard = () => {
     const [queue, setQueue] = useState([])
     const [topics, setTopics] = useState('Pedagogy')
     const [level, setLevel] = useState('Beginner')
-    const [ready,setReady] = useState(false)
-    const [askSomethingElse,setAskSomethingElse] = useState(false)
-    const [index,setIndex] = useState(0)
-    const [test,setTest] = useState([])
+    const [ready, setReady] = useState(false)
+    const [askSomethingElse, setAskSomethingElse] = useState(false)
+    const [index, setIndex] = useState(0)
+    const [test, setTest] = useState([])
+    const [color, setColor] = useState('black')
+    const [option, setOption] = useState('Next')
+    const [lang, setLang] = useState('english')
 
     const topic = useRef(null)
     const buttonRefs = useRef([]);
@@ -187,7 +190,7 @@ const Dashboard = () => {
         accordionData.push(
             {
                 title: categories[i].name,
-                content: <nav><ul>{categories[i].content.map(item => <li onClick={() => { setTopics(item); topic.current.value="" }}>{item}</li>)}</ul></nav>
+                content: <nav><ul>{categories[i].content.map(item => <li onClick={() => { setTopics(item); topic.current.value = "" }}>{item}</li>)}</ul></nav>
             }
         )
     }
@@ -195,7 +198,6 @@ const Dashboard = () => {
     const generate = async () => {
         setAskSomethingElse(false)
         setReady(false)
-        setIndex(0)
         try {
             const googleAI = new GoogleGenerativeAI(API_KEY)
             const geminiModel = googleAI.getGenerativeModel({
@@ -203,17 +205,18 @@ const Dashboard = () => {
                 geminiConfig,
             });
 
-            const prompt = `output an array (enclosed in [ and ]. don't put '\`' sign anywhere) of 5 valid json strings (separated by commas) each representing a ${level} level question about ${topics} in hindi language. if no question can be generated about ${topics} just return 'false' otherwise output array of 5 json strings. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options. then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
+            const prompt = `output an array (enclosed in [ and ]. don't put '\`' sign anywhere) of 5 valid json strings (separated by commas) each representing a ${level} level question about ${topics} in ${lang} language. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options. then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
             const result = await geminiModel.generateContent(prompt);
             const responseText = JSON.parse(result.response.text())
             console.log('response')
             console.log(responseText)
-            if (responseText==='false') {
+            if (responseText === 'false') {
                 setAskSomethingElse(true)
                 setReady(true)
-            } else {                
+            } else {
                 setTest(responseText)
                 setReady(true)
+                setIndex(0)
             }
 
         } catch (error) {
@@ -223,6 +226,7 @@ const Dashboard = () => {
     };
 
     const handleAnswerClick = (option) => {
+
         if (option === answer) {
             buttonRefs.current[option].className = 'option right_option'
         } else {
@@ -247,22 +251,29 @@ const Dashboard = () => {
         }
     }, [topics]);
 
-    useEffect(()=>{
-        console.log('test'+test)
+    useEffect(() => {
+        console.log('test' + test)
         setQueue(test)
-    },[test])
+    }, [test])
 
-    useEffect(()=>{
-        console.log('queue'+queue)
-    },[queue])
-
-    useEffect(()=>{
+    useEffect(() => {
+        console.log('queue' + queue)
         answer = queue[index]?.answer
         console.log(answer)
-    },[index])
-    useEffect(()=>{
+    }, [queue])
+
+    useEffect(() => {
+        answer = queue[index]?.answer
+        console.log(answer)
+        if (index == queue.length - 1) { setOption('More') } else { setOption('Next') }
+        queue[index]?.options.forEach(option=>{
+            buttonRefs.current[option].className = 'option normal'
+        })
+    }, [index])
+
+    useEffect(() => {
         console.log('ask : ' + askSomethingElse)
-    },[askSomethingElse])
+    }, [askSomethingElse])
 
     const Accordion = ({ title, content }) => {
         const [isActive, setIsActive] = useState(false);
@@ -309,7 +320,7 @@ const Dashboard = () => {
                     <span className="title">Topics</span>
                     <div className="search_text" style={{ display: 'flex', width: '100%' }}>
                         {/* <button onClick={generate}>generate</button> */}
-                        <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { setTopics(topic.current.value) }}} type="text" maxLength={70} placeholder="Enter a topic and practice" />
+                        <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { setTopics(topic.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" />
                         <img src={search} alt="search" class="search" />
                     </div>
                     <div className="normal_flex" id="categories">
@@ -324,19 +335,19 @@ const Dashboard = () => {
                         <span className="title" style={{ opacity: '.7', display: 'block' }}>{topics}</span>
                     </div>
                     {ready ? (askSomethingElse ? <span className="title">Ask something else</span> : <><h1 style={{ textAlign: 'center' }}>{queue[index]?.question}</h1>
-                    <div id="options" className="flex">
-                         {queue[index]?.options?.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => handleAnswerClick(option)} className='option normal'>{option}</div>)}
-                    </div>
-                    <div id="navigate">
-                        <div onClick={()=>{setIndex(index-1)}}>
-                            <img className="arrow" src={arrow} style={{ transform: 'rotate(90deg)' }} alt="arrow" />
-                            Previous
+                        <div id="options" className="flex">
+                            {queue[index]?.options?.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => handleAnswerClick(option)} className='option normal'>{option}</div>)}
                         </div>
-                        <div onClick={()=>{if(index==queue.length-1){generate()}else{setIndex(index+1)}}}>
-                            Next
-                            <img className="arrow" src={arrow} style={{ transform: 'rotate(-90deg)' }} alt="arrow" />
-                        </div>
-                    </div></>) : <div id="loading_div" className="flex"><img id="loading" src={loading} /></div>}
+                        <div id="navigate">
+                            <div style={{ color: color }} onClick={() => { if (index > 0) { setIndex(index - 1) } else { setColor('grey') } }}>
+                                <img className="arrow" src={arrow} style={{ transform: 'rotate(90deg)' }} alt="arrow" />
+                                Previous
+                            </div>
+                            <div onClick={() => { if (index == queue.length - 1) { generate() } else { setIndex(index + 1); setColor('black') }; }}>
+                                {option}
+                                <img className="arrow" src={arrow} style={{ transform: 'rotate(-90deg)' }} alt="arrow" />
+                            </div>
+                        </div></>) : <div id="loading_div" className="flex"><img id="loading" src={loading} /></div>}
                 </section>
             </div>
         </div>
