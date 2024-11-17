@@ -37,12 +37,22 @@ const Dashboard = () => {
     const [lang, setLang] = useState('english')
 
     // UI variables
-    const [blurShow, setBlurShow] = useState(false)
+    const [blurShow, setBlurShow] = useState(true)
+    const [levelShow, setLevelShow] = useState(true)
+    const [aboutShow, setAboutShow] = useState(false)
+    const [langShow, setLangShow] = useState(false)
 
     const topic = useRef(null)
     const buttonRefs = useRef([]);
 
     let answer = ''
+
+    let navigate = useNavigate()
+
+    let checkStatus = () => {
+        if (!localStorage.getItem('id'))
+            navigate('/login')
+    }
 
     const categories = [
         {
@@ -220,6 +230,7 @@ const Dashboard = () => {
                 setTest(responseText)
                 setReady(true)
                 setIndex(0)
+                setColor('grey')
             }
 
         } catch (error) {
@@ -237,12 +248,6 @@ const Dashboard = () => {
             buttonRefs.current[answer].className = 'option right_option'
         }
     };
-
-    let navigate = useNavigate()
-    let checkStatus = () => {
-        if (!localStorage.getItem('id'))
-            navigate('/login')
-    }
 
     useEffect(() => {
         checkStatus()
@@ -269,7 +274,7 @@ const Dashboard = () => {
         answer = queue[index]?.answer
         // console.log(answer)
         if (index == queue.length - 1) { setOption('More') } else { setOption('Next') }
-        queue[index]?.options.forEach(option=>{
+        queue[index]?.options.forEach(option => {
             buttonRefs.current[option].className = 'option normal'
         })
     }, [index])
@@ -293,20 +298,40 @@ const Dashboard = () => {
 
     const _setLevel = (_level) => {
         setBlurShow(false)
+        setLevelShow(false)
         setLevel(_level)
+    }
+
+    const initial = () => {
+        setLangShow(false)
+        setAboutShow(false)
+        setLevelShow(false)
+        setBlurShow(true)
     }
 
     return <div id="auth_screen" className="screen" style={{ height: '100%' }}>
         <div id="dash_container" className="flex">
-            <div id="blur" style={{display:(blurShow?'flex':'none')}}>
-                <div className="options level">
+            <div id="blur" style={{ display: (blurShow ? 'flex' : 'none') }}>
+                <div onClick={()=>{setBlurShow(false);setLevelShow(false);setAboutShow(false);setLangShow(false)}} style={{height:'100%',width:'100%',background:'transparent',position:'fixed'}} id="back"></div>
+                <div className="options level" style={{ display: (levelShow ? 'flex' : 'none') }}>
                     <nav>
                         <ul>
-                            <li onClick={()=>_setLevel('Beginner')}>Beginner</li>
-                            <li onClick={()=>_setLevel('Intermediate')}>Intermediate</li>
-                            <li onClick={()=>_setLevel('Advance')}>Advance</li>
+                            <li onClick={() => _setLevel('Beginner')}>Beginner</li>
+                            <li onClick={() => _setLevel('Intermediate')}>Intermediate</li>
+                            <li onClick={() => _setLevel('Advance')}>Advance</li>
                         </ul>
                     </nav>
+                </div>
+                <div className="options about normal_flex" style={{ display: (aboutShow ? 'flex' : 'none') }}>
+                    <h2>About</h2>
+                    <p>Elevate your learning experience with our AI-powered MCQ practice platform. Our platform offers a wide range of subjects and topics, allowing you to customize your practice sessions to your specific needs. With our dynamic question generation and diverse practice modes, you can effectively prepare for exams and improve your understanding of the subject matter. Our platform provides a user-friendly interface and is accessible from any device, making it the perfect tool for students of all levels.</p>
+                </div>
+                <div className="options lang normal_flex" style={{ display: (langShow ? 'flex' : 'none') }}>
+                    <div className="search_text" style={{ display: 'flex', width: '100%' }}>
+                        {/* <button onClick={generate}>generate</button> */}
+                        <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { setTopics(topic.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" />
+                        <img src={search} alt="search" class="search" />
+                    </div>
                 </div>
             </div>
             <header className="flex header">
@@ -317,14 +342,14 @@ const Dashboard = () => {
                             English (UK)
                             <img className="arrow" src={arrow} alt="" />
                         </li>
-                        <li onClick={()=>{setBlurShow(true)}}>
+                        <li onClick={() => { initial();setLevelShow(true) }}>
                             {level}
                             <img className="arrow" src={arrow} alt="" />
                         </li>
-                        <li>
+                        <li onClick={() => { initial();setAboutShow(true) }}>
                             About
                         </li>
-                        <li>
+                        <li onClick={() => { localStorage.clear(); navigate('/login') }}>
                             Log out
                         </li>
                     </ul>

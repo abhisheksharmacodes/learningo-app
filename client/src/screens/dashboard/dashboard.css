@@ -1,7 +1,7 @@
 #dash_container {
     width: 100%;
-    height:100%;
-    gap:0;
+    height: 100%;
+    gap: 0;
     justify-content: start;
     align-items: start;
 }
@@ -22,6 +22,24 @@
 #blur .options {
     background-color: white;
     border-radius: 15px;
+    flex-direction: column;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .09);
+}
+
+.about,
+.lang {
+    padding: 20px;
+}
+
+.about {
+    width: 50%;
+    gap: 20px;
+    text-indent: 20px;
+}
+
+.about p {
+    text-align: justify;
+    color: var(--gray3)
 }
 
 #blur ul li {
@@ -34,22 +52,28 @@
 }
 
 #blur ul li:hover {
-    background-color: var(--gray0);
+    background-color: var(--gray-1);
 }
 
 #blur ul li:last-child {
+    border-radius: 0 0 15px 15px;    
     border: none;
 }
 
-#content {
-    flex-grow:1;
-    width:100%;
-    box-sizing: border-box;
-    padding: 30px;
-    gap:30px;
+#blur ul li:first-child {
+    border-radius: 15px 15px 0 0;
 }
 
-#topics,#practice {
+#content {
+    flex-grow: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 30px;
+    gap: 30px;
+}
+
+#topics,
+#practice {
     background-color: white;
     height: 100%;
     border-radius: 10px;
@@ -79,29 +103,31 @@
     padding-right: 40px;
 }
 
-.search_text input:focus ~ .search {
+.search_text input:focus~.search {
     opacity: 1;
 }
 
 #categories {
     flex-direction: column;
     width: 100%;
-    gap:10px;
+    gap: 10px;
 }
 
 .arrow {
     height: 7px;
 }
 
-.accordion-item, .accordion-title {
+.accordion-item,
+.accordion-title {
     width: 100%;
 }
 
-.accordion-title, #navigate {
+.accordion-title,
+#navigate {
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
     align-items: center;
-    padding:10px 20px;
+    padding: 10px 20px;
     width: 100%;
 }
 
@@ -114,30 +140,30 @@
 
 .accordion-content {
     background-color: rgba(217, 217, 217, .2);
-    border-radius:0 0 8px 8px;
-    padding:10px 20px;
+    border-radius: 0 0 8px 8px;
+    padding: 10px 20px;
 }
 
 .accordion-content nav ul {
     display: flex;
     flex-direction: column;
-    gap:7px;
+    gap: 7px;
 }
 
 .accordion-content ul li {
     display: block;
     list-style-type: none;
     margin: 0;
-    color:var(--gray2);
+    color: var(--gray2);
 }
 
 .accordion-content ul li:hover {
-    color:var(--gray3);
+    color: var(--gray3);
 }
 
 #options {
     width: 100%;
-    gap:15px
+    gap: 15px
 }
 
 .option {
@@ -159,13 +185,13 @@
 }
 
 .wrong_option {
-    background-color: rgba(255,27,27,.3);
-    border: 2px solid rgba(255,0,0,.35);
+    background-color: rgba(255, 27, 27, .3);
+    border: 2px solid rgba(255, 0, 0, .35);
 }
 
 .right_option {
-    background-color: rgba(0,255,68,.3);
-    border: 2px solid rgba(4,168,47,.51);
+    background-color: rgba(0, 255, 68, .3);
+    border: 2px solid rgba(4, 168, 47, .51);
 }
 
 #navigate {
@@ -178,7 +204,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap:7px;
+    gap: 7px;
     cursor: pointer;
     font-size: 18px;
 }
