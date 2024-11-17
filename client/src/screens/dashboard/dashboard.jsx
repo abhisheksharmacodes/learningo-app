@@ -36,6 +36,9 @@ const Dashboard = () => {
     const [option, setOption] = useState('Next')
     const [lang, setLang] = useState('english')
 
+    // UI variables
+    const [blurShow, setBlurShow] = useState(false)
+
     const topic = useRef(null)
     const buttonRefs = useRef([]);
 
@@ -208,8 +211,8 @@ const Dashboard = () => {
             const prompt = `output an array (enclosed in [ and ]. don't put '\`' sign anywhere) of 5 valid json strings (separated by commas) each representing a ${level} level question about ${topics} in ${lang} language. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options. then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
             const result = await geminiModel.generateContent(prompt);
             const responseText = JSON.parse(result.response.text())
-            console.log('response')
-            console.log(responseText)
+            // console.log('response')
+            // console.log(responseText)
             if (responseText === 'false') {
                 setAskSomethingElse(true)
                 setReady(true)
@@ -252,19 +255,19 @@ const Dashboard = () => {
     }, [topics]);
 
     useEffect(() => {
-        console.log('test' + test)
+        // console.log('test' + test)
         setQueue(test)
     }, [test])
 
     useEffect(() => {
-        console.log('queue' + queue)
+        // console.log('queue' + queue)
         answer = queue[index]?.answer
-        console.log(answer)
+        // console.log(answer)
     }, [queue])
 
     useEffect(() => {
         answer = queue[index]?.answer
-        console.log(answer)
+        // console.log(answer)
         if (index == queue.length - 1) { setOption('More') } else { setOption('Next') }
         queue[index]?.options.forEach(option=>{
             buttonRefs.current[option].className = 'option normal'
@@ -272,8 +275,8 @@ const Dashboard = () => {
     }, [index])
 
     useEffect(() => {
-        console.log('ask : ' + askSomethingElse)
-    }, [askSomethingElse])
+        generate()
+    }, [level])
 
     const Accordion = ({ title, content }) => {
         const [isActive, setIsActive] = useState(false);
@@ -288,8 +291,24 @@ const Dashboard = () => {
         );
     };
 
+    const _setLevel = (_level) => {
+        setBlurShow(false)
+        setLevel(_level)
+    }
+
     return <div id="auth_screen" className="screen" style={{ height: '100%' }}>
         <div id="dash_container" className="flex">
+            <div id="blur" style={{display:(blurShow?'flex':'none')}}>
+                <div className="options level">
+                    <nav>
+                        <ul>
+                            <li onClick={()=>_setLevel('Beginner')}>Beginner</li>
+                            <li onClick={()=>_setLevel('Intermediate')}>Intermediate</li>
+                            <li onClick={()=>_setLevel('Advance')}>Advance</li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
             <header className="flex header">
                 <img className="logo" src={logo} alt="logo" />
                 <nav>
@@ -298,8 +317,8 @@ const Dashboard = () => {
                             English (UK)
                             <img className="arrow" src={arrow} alt="" />
                         </li>
-                        <li>
-                            Beginner
+                        <li onClick={()=>{setBlurShow(true)}}>
+                            {level}
                             <img className="arrow" src={arrow} alt="" />
                         </li>
                         <li>

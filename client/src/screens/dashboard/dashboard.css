@@ -6,6 +6,41 @@
     align-items: start;
 }
 
+#blur {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(14px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#blur .options {
+    background-color: white;
+    border-radius: 15px;
+}
+
+#blur ul li {
+    display: block;
+    text-align: center;
+    margin: 0;
+    padding: 15px 35px;
+    border-bottom: 1px solid rgba(0, 0, 0, .3);
+    font-size: large;
+}
+
+#blur ul li:hover {
+    background-color: var(--gray0);
+}
+
+#blur ul li:last-child {
+    border: none;
+}
+
 #content {
     flex-grow:1;
     width:100%;
