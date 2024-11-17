@@ -45,7 +45,7 @@ const Dashboard = () => {
     const topic = useRef(null)
     const buttonRefs = useRef([]);
 
-    let answer = ''
+    const answer = useRef('');
 
     let navigate = useNavigate()
 
@@ -218,7 +218,7 @@ const Dashboard = () => {
                 geminiConfig,
             });
 
-            const prompt = `output an array (enclosed in [ and ]. don't put '\`' sign anywhere) of 5 valid json strings (separated by commas) each representing a ${level} level question about ${topics} in ${lang} language. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options. then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
+            const prompt = `output an array (enclosed in [ and ]. don't put '\`' sign anywhere) of 5 valid json strings (separated by commas) each representing a ${level} level question about ${topics} in ${lang} language. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options strictly (double check it). then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
             const result = await geminiModel.generateContent(prompt);
             const responseText = JSON.parse(result.response.text())
             // console.log('response')
@@ -240,12 +240,17 @@ const Dashboard = () => {
     };
 
     const handleAnswerClick = (option) => {
-
-        if (option === answer) {
+        console.log(`
+            option: ${option},\n
+            answer: ${answer.current},\n
+            index: ${index},\n 
+        `)
+        console.log(queue[index])
+        if (option === answer.current) {
             buttonRefs.current[option].className = 'option right_option'
         } else {
             buttonRefs.current[option].className = 'option wrong_option'
-            buttonRefs.current[answer].className = 'option right_option'
+            buttonRefs.current[answer.current].className = 'option right_option'
         }
     };
 
@@ -266,13 +271,13 @@ const Dashboard = () => {
 
     useEffect(() => {
         // console.log('queue' + queue)
-        answer = queue[index]?.answer
-        // console.log(answer)
+        answer.current = queue[index]?.answer
+        console.log(answer)
     }, [queue])
 
     useEffect(() => {
-        answer = queue[index]?.answer
-        // console.log(answer)
+        answer.current = queue[index]?.answer
+        console.log(answer.current)
         if (index == queue.length - 1) { setOption('More') } else { setOption('Next') }
         queue[index]?.options.forEach(option => {
             buttonRefs.current[option].className = 'option normal'
@@ -380,7 +385,7 @@ const Dashboard = () => {
                     </div>
                     {ready ? (askSomethingElse ? <span className="title">Ask something else</span> : <><h1 style={{ textAlign: 'center' }}>{queue[index]?.question}</h1>
                         <div id="options" className="flex">
-                            {queue[index]?.options?.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => handleAnswerClick(option)} className='option normal'>{option}</div>)}
+                            {queue[index]?.options?.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => {handleAnswerClick(option)}} className='option normal'>{option}</div>)}
                         </div>
                         <div id="navigate">
                             <div style={{ color: color }} onClick={() => { if (index > 0) { setIndex(index - 1) } else { setColor('grey') } }}>
