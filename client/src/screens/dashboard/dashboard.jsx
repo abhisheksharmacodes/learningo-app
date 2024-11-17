@@ -37,8 +37,8 @@ const Dashboard = () => {
     const [lang, setLang] = useState('english')
 
     // UI variables
-    const [blurShow, setBlurShow] = useState(true)
-    const [levelShow, setLevelShow] = useState(true)
+    const [blurShow, setBlurShow] = useState(false)
+    const [levelShow, setLevelShow] = useState(false)
     const [aboutShow, setAboutShow] = useState(false)
     const [langShow, setLangShow] = useState(false)
 
