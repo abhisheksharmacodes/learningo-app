@@ -23,7 +23,14 @@ const geminiConfig = {
     maxOutputTokens: 4096,
 };
 
+
+
+
 const Dashboard = () => {
+
+    let cur_LG = null
+
+
 
     const [queue, setQueue] = useState([])
     const [topics, setTopics] = useState('Pedagogy')
@@ -35,12 +42,14 @@ const Dashboard = () => {
     const [color, setColor] = useState('black')
     const [option, setOption] = useState('Next')
     const [lang, setLang] = useState('english')
+    const [LG, setLG] = useState(cur_LG)
 
     // UI variables
     const [blurShow, setBlurShow] = useState(false)
     const [levelShow, setLevelShow] = useState(false)
     const [aboutShow, setAboutShow] = useState(false)
     const [langShow, setLangShow] = useState(false)
+    const [right, setRight] = useState(0)
 
     const topic = useRef(null)
     const buttonRefs = useRef([]);
@@ -211,6 +220,7 @@ const Dashboard = () => {
     const generate = async () => {
         setAskSomethingElse(false)
         setReady(false)
+        setRight(0)
         try {
             const googleAI = new GoogleGenerativeAI(API_KEY)
             const geminiModel = googleAI.getGenerativeModel({
@@ -240,14 +250,16 @@ const Dashboard = () => {
     };
 
     const handleAnswerClick = (option) => {
-        console.log(`
-            option: ${option},\n
-            answer: ${answer.current},\n
-            index: ${index},\n 
-        `)
-        console.log(queue[index])
+        // console.log(`
+        //     option: ${option},\n
+        //     answer: ${answer.current},\n
+        //     index: ${index},\n 
+        // `)
+        // console.log(queue[index])
         if (option === answer.current) {
             buttonRefs.current[option].className = 'option right_option'
+            setRight(right + 1)
+            console.log(right)
         } else {
             buttonRefs.current[option].className = 'option wrong_option'
             buttonRefs.current[answer.current].className = 'option right_option'
@@ -256,6 +268,10 @@ const Dashboard = () => {
 
     useEffect(() => {
         checkStatus()
+        axios.get('https://newzlash-api.vercel.app/user/' + localStorage.getItem('id')).then((data) => {
+            setLG(parseInt(data.data[0]))
+            localStorage.setItem('lg', parseInt(data.data[0]))
+        })
     }, [])
 
     useEffect(() => {
@@ -272,7 +288,7 @@ const Dashboard = () => {
     useEffect(() => {
         // console.log('queue' + queue)
         answer.current = queue[index]?.answer
-        console.log(answer)
+        // console.log(answer)
     }, [queue])
 
     useEffect(() => {
@@ -314,10 +330,25 @@ const Dashboard = () => {
         setBlurShow(true)
     }
 
+    const more = () => {
+        if (index == queue.length - 1) {
+            let new_lg = parseInt(localStorage.getItem('lg')) + Math.floor((right + 5) * right / 5)
+            setLG(new_lg)
+            localStorage.setItem('lg', new_lg.toString())
+            axios.put('https://newzlash-api.vercel.app/niches/' + localStorage.getItem('id'), [parseInt(new_lg)]).then(() => {
+                navigate('/dashboard')
+            })
+            generate()
+        } else {
+            setIndex(index + 1)
+            setColor('black')
+        }
+    }
+
     return <div id="auth_screen" className="screen" style={{ height: '100%' }}>
         <div id="dash_container" className="flex">
             <div id="blur" style={{ display: (blurShow ? 'flex' : 'none') }}>
-                <div onClick={()=>{setBlurShow(false);setLevelShow(false);setAboutShow(false);setLangShow(false)}} style={{height:'100%',width:'100%',background:'transparent',position:'fixed'}} id="back"></div>
+                <div onClick={() => { setBlurShow(false); setLevelShow(false); setAboutShow(false); setLangShow(false) }} style={{ height: '100%', width: '100%', background: 'transparent', position: 'fixed' }} id="back"></div>
                 <div className="options level" style={{ display: (levelShow ? 'flex' : 'none') }}>
                     <nav>
                         <ul>
@@ -347,11 +378,11 @@ const Dashboard = () => {
                             English (UK)
                             <img className="arrow" src={arrow} alt="" />
                         </li>
-                        <li onClick={() => { initial();setLevelShow(true) }}>
+                        <li onClick={() => { initial(); setLevelShow(true) }}>
                             {level}
                             <img className="arrow" src={arrow} alt="" />
                         </li>
-                        <li onClick={() => { initial();setAboutShow(true) }}>
+                        <li onClick={() => { initial(); setAboutShow(true) }}>
                             About
                         </li>
                         <li onClick={() => { localStorage.clear(); navigate('/login') }}>
@@ -361,7 +392,7 @@ const Dashboard = () => {
                 </nav>
                 <div className="normal_flex">
                     <img src={coin} alt="coin" style={{ height: '35px', marginRight: '10px' }} />
-                    0
+                    {LG}
                 </div>
             </header>
             <div className="normal_flex" id="content">
@@ -385,14 +416,14 @@ const Dashboard = () => {
                     </div>
                     {ready ? (askSomethingElse ? <span className="title">Ask something else</span> : <><h1 style={{ textAlign: 'center' }}>{queue[index]?.question}</h1>
                         <div id="options" className="flex">
-                            {queue[index]?.options?.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => {handleAnswerClick(option)}} className='option normal'>{option}</div>)}
+                            {queue[index]?.options?.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => { handleAnswerClick(option) }} className='option normal'>{option}</div>)}
                         </div>
                         <div id="navigate">
                             <div style={{ color: color }} onClick={() => { if (index > 0) { setIndex(index - 1) } else { setColor('grey') } }}>
                                 <img className="arrow" src={arrow} style={{ transform: 'rotate(90deg)' }} alt="arrow" />
                                 Previous
                             </div>
-                            <div onClick={() => { if (index == queue.length - 1) { generate() } else { setIndex(index + 1); setColor('black') }; }}>
+                            <div onClick={more}>
                                 {option}
                                 <img className="arrow" src={arrow} style={{ transform: 'rotate(-90deg)' }} alt="arrow" />
                             </div>

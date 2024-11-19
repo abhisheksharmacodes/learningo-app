@@ -43,7 +43,7 @@ app.post('/adduser', async (req, res) => {
         console.log("Inserted")
     } catch (e) {
         console.log(e)
-        res.status(500).json({ message: 'Error' })
+        res.sendStatus(500).json({ message: 'Error' })
     }
 })
 
@@ -74,7 +74,7 @@ app.post('/login', async (req, res) => {
 
     } catch (err) {
         console.error(err)
-        res.status(500)
+        res.sendStatus(500)
     }
 })
 
@@ -87,9 +87,14 @@ app.get('/user/:id', async (req, res) => {
         const query = { _id: new ObjectId(id) }
         const cursor = collection.find(query)
         const results = await cursor.toArray()
-        res.send(results[0].niches)
+        if (results.length > 0) {
+            res.json({data:results[0].niches});
+        } else {
+            res.status(404).send({ message: 'User  not found' }); // Send a 404 status if user not found
+        }
     } catch (e) {
         console.log(e)
+        res.sendStatus(500);
     }
 })
 

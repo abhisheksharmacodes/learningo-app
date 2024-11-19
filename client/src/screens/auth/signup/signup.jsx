@@ -100,7 +100,7 @@ const Signup = () => {
             fname: fname.current.value,
             email: user_email.current.value,
             password: pass.current.value,
-            niches: []
+            niches: [0]
         }
         axios.post('https://newzlash-api.vercel.app/adduser', user_data).then((data) => {
             localStorage.setItem('id', data.data)
@@ -125,7 +125,7 @@ const Signup = () => {
                         <div className="normal_flex">
                             <input type="email" ref={user_email} onChange={emailValidate} placeholder="Email"></input>
                         </div>
-                        <div className="normal_flex">
+                        <div className="normal_flex" style={{flexDirection:'column'}}>
                             <input maxLength={20} onChange={validate} onFocus={() => checkPass.current.style.display = 'flex'} onBlur={() => checkPass.current.style.display = 'none'} type="password" id="pass" ref={pass} onInput={password_strength} placeholder="Password"></input>
                             <div ref={checkPass} style={{display:'none',gap:'10px'}} id="pass_status" className="flex">
                                 <div className="password_status">

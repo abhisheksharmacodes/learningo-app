@@ -43,7 +43,6 @@ const Login = () => {
                 localStorage.setItem('loggedIn', 'true')
                 localStorage.setItem('email', user_email.current.value)
                 localStorage.setItem('name', data.data.fname)
-                localStorage.setItem('niches', data.data.niches)
                 navigate('/dashboard')
             }
         })
