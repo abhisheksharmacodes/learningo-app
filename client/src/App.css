@@ -148,7 +148,7 @@ button:active {
   font-size: 15pt;
 }
 
-.title::first-letter {
+.title::first-letter,.langtext::first-letter {
   text-transform: capitalize;
 }
 

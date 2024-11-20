@@ -23,26 +23,19 @@ const geminiConfig = {
     maxOutputTokens: 4096,
 };
 
-
-
-
 const Dashboard = () => {
-
-    let cur_LG = null
-
-
 
     const [queue, setQueue] = useState([])
     const [topics, setTopics] = useState('Pedagogy')
-    const [level, setLevel] = useState('Beginner')
+    const [level, setLevel] = useState(localStorage.getItem('level')?localStorage.getItem('level'):'Beginner')
     const [ready, setReady] = useState(false)
     const [askSomethingElse, setAskSomethingElse] = useState(false)
     const [index, setIndex] = useState(0)
     const [test, setTest] = useState([])
     const [color, setColor] = useState('black')
     const [option, setOption] = useState('Next')
-    const [lang, setLang] = useState('english')
-    const [LG, setLG] = useState(cur_LG)
+    const [lang, setLang] = useState(localStorage.getItem('lang')?localStorage.getItem('lang'):'english')
+    const [LG, setLG] = useState(null)
 
     // UI variables
     const [blurShow, setBlurShow] = useState(false)
@@ -52,6 +45,7 @@ const Dashboard = () => {
     const [right, setRight] = useState(0)
 
     const topic = useRef(null)
+    const langText = useRef(null)
     const buttonRefs = useRef([]);
 
     const answer = useRef('');
@@ -281,6 +275,11 @@ const Dashboard = () => {
     }, [topics]);
 
     useEffect(() => {
+        localStorage.setItem('lang',lang)
+        generate()
+    }, [lang]);
+
+    useEffect(() => {
         // console.log('test' + test)
         setQueue(test)
     }, [test])
@@ -301,6 +300,7 @@ const Dashboard = () => {
     }, [index])
 
     useEffect(() => {
+        localStorage.setItem('level',level)
         generate()
     }, [level])
 
@@ -348,7 +348,7 @@ const Dashboard = () => {
     return <div id="auth_screen" className="screen" style={{ height: '100%' }}>
         <div id="dash_container" className="flex">
             <div id="blur" style={{ display: (blurShow ? 'flex' : 'none') }}>
-                <div onClick={() => { setBlurShow(false); setLevelShow(false); setAboutShow(false); setLangShow(false) }} style={{ height: '100%', width: '100%', background: 'transparent', position: 'fixed' }} id="back"></div>
+                <div onClick={()=>{initial();setBlurShow(false)}} style={{ height: '100%', width: '100%', background: 'transparent', position: 'fixed' }} id="back"></div>
                 <div className="options level" style={{ display: (levelShow ? 'flex' : 'none') }}>
                     <nav>
                         <ul>
@@ -365,7 +365,7 @@ const Dashboard = () => {
                 <div className="options lang normal_flex" style={{ display: (langShow ? 'flex' : 'none') }}>
                     <div className="search_text" style={{ display: 'flex', width: '100%' }}>
                         {/* <button onClick={generate}>generate</button> */}
-                        <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { setTopics(topic.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" />
+                        <input ref={langText} onKeyDown={(e) => { if (e.key === 'Enter') { initial();setBlurShow();setLang(langText.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" />
                         <img src={search} alt="search" class="search" />
                     </div>
                 </div>
@@ -374,8 +374,8 @@ const Dashboard = () => {
                 <img className="logo" src={logo} alt="logo" />
                 <nav>
                     <ul>
-                        <li>
-                            English (UK)
+                        <li onClick={() => { initial(); setLangShow(true) }}>
+                            <span className="langtext">{lang}</span>
                             <img className="arrow" src={arrow} alt="" />
                         </li>
                         <li onClick={() => { initial(); setLevelShow(true) }}>
