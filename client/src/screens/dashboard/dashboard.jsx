@@ -201,6 +201,7 @@ const Dashboard = () => {
     ]
 
     let accordionData = []
+    
 
     for (let i = 0; i < categories.length; i++) {
         accordionData.push(
@@ -210,6 +211,73 @@ const Dashboard = () => {
             }
         )
     }
+
+    const languages = [
+        "Akan",
+        "Akan",
+        "Amharic",
+        "Amharic",
+        "Arabic",
+        "Bengali",
+        "Burmese",
+        "Burmese",
+        "Cebuano",
+        "Chichewa",
+        "Chichewa",
+        "English",
+        "French",
+        "Fula",
+        "Fula",
+        "German",
+        "Gujarati",
+        "Hausa",
+        "Hmong",
+        "Hmong",
+        "Igbo",
+        "Igbo",
+        "Italian",
+        "Japanese",
+        "Javanese",
+        "Kannada",
+        "Kazakh",
+        "Kazakh",
+        "Khmer",
+        "Kinyarwanda",
+        "Kinyarwanda",
+        "Kirundi",
+        "Kirundi",
+        "Korean",
+        "Maithili",
+        "Maithili",
+        "Malagasy",
+        "Malagasy",
+        "Malay",
+        "Marathi",
+        "Marwari",
+        "Marwari",
+        "Odia",
+        "Odia",
+        "Portuguese",
+        "Punjabi",
+        "Russian",
+        "Sindhi",
+        "Sinhalese",
+        "Sinhalese",
+        "Somali",
+        "Somali",
+        "Spanish",
+        "Sundanese",
+        "Sundanese",
+        "Swahili",
+        "Swahili",
+        "Tamil",
+        "Telugu",
+        "Turkish",
+        "Ukrainian",
+        "Urdu",
+        "Vietnamese",
+        "Yoruba"
+    ]
 
     const generate = async () => {
         setAskSomethingElse(false)
@@ -225,8 +293,6 @@ const Dashboard = () => {
             const prompt = `output an array (enclosed in [ and ]. don't put '\`' sign anywhere) of 5 valid json strings (separated by commas) each representing a ${level} level question about ${topics} in ${lang} language. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options strictly (double check it). then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
             const result = await geminiModel.generateContent(prompt);
             const responseText = JSON.parse(result.response.text())
-            // console.log('response')
-            // console.log(responseText)
             if (responseText === 'false') {
                 setAskSomethingElse(true)
                 setReady(true)
@@ -365,8 +431,11 @@ const Dashboard = () => {
                 <div className="options lang normal_flex" style={{ display: (langShow ? 'flex' : 'none') }}>
                     <div className="search_text" style={{ display: 'flex', width: '100%' }}>
                         {/* <button onClick={generate}>generate</button> */}
-                        <input ref={langText} onKeyDown={(e) => { if (e.key === 'Enter') { initial();setBlurShow();setLang(langText.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" />
+                        <input ref={langText} onKeyDown={(e) => { if (e.key === 'Enter') { initial();setBlurShow();setLang(langText.current.value) } }} type="text" maxLength={70} placeholder="Enter your language" />
                         <img src={search} alt="search" class="search" />
+                    </div>
+                    <div id="langs" className="normal_flex">
+                        {languages.map((lang)=><span>{lang}</span>)}
                     </div>
                 </div>
             </div>

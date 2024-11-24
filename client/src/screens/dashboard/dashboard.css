@@ -24,6 +24,8 @@
     border-radius: 15px;
     flex-direction: column;
     box-shadow: 0 0 20px rgba(0, 0, 0, .09);
+    max-width: 80%;
+    max-height: 80%;
 }
 
 .about,
@@ -62,6 +64,16 @@
 
 #blur ul li:first-child {
     border-radius: 15px 15px 0 0;
+}
+
+#langs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap:10px;
+    width: 100%;
+    justify-content: center;
+    align-items: left;
+    margin-top: 20px;
 }
 
 #content {

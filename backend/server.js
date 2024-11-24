@@ -49,7 +49,6 @@ app.post('/adduser', async (req, res) => {
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body
-
     try {
         const client = await connect();
         const db = client.db("users");
@@ -70,8 +69,6 @@ app.post('/login', async (req, res) => {
         } else {
             res.send('email')
         }
-
-
     } catch (err) {
         console.error(err)
         res.sendStatus(500)
