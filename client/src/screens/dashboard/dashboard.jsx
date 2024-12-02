@@ -434,9 +434,9 @@ const Dashboard = () => {
                         <input ref={langText} onKeyDown={(e) => { if (e.key === 'Enter') { initial();setBlurShow();setLang(langText.current.value) } }} type="text" maxLength={70} placeholder="Enter your language" />
                         <img src={search} alt="search" class="search" />
                     </div>
-                    <div id="langs" className="normal_flex">
+{/*                     <div id="langs" className="normal_flex">
                         {languages.map((lang)=><span>{lang}</span>)}
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <header className="flex header">
