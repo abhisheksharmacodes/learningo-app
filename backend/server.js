@@ -43,12 +43,89 @@ app.post('/adduser', async (req, res) => {
         console.log("Inserted")
     } catch (e) {
         console.log(e)
-        res.sendStatus(500).json({ message: 'Error' })
+        res.status(500).json({ message: 'Error' })
     }
+})
+
+app.get('/niches/:id', async (req, res) => {
+    const id = req.params.id
+    try {
+        const client = await connect();
+        const db = client.db("users");
+        const collection = db.collection("users");
+        const query = { _id: new ObjectId(id) }
+        const cursor = collection.find(query)
+        const results = await cursor.toArray()
+
+        res.send(results[0].niches)
+    } catch (e) {
+        res.send(e)
+    }
+})
+
+app.put('/niches/:id', async (req, res) => {
+    const id = req.params.id
+    const data = req.body
+
+    try {
+        const client = await connect();
+        const db = client.db("users");
+        const collection = db.collection("users");
+        const updateResult = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { niches: data } })
+        if (updateResult.modifiedCount === 1) {
+            res.send(true)
+        } else {
+            res.send(false)
+        }
+    } catch (err) {
+        console.error(err)
+        res.status(500)
+    }
+
+})
+
+app.get('/topics/:id', async (req, res) => {
+    const id = req.params.id
+    try {
+        const client = await connect();
+        const db = client.db("users");
+        const collection = db.collection("users");
+        const query = { _id: new ObjectId(id) }
+        const cursor = collection.find(query)
+        const results = await cursor.toArray()
+
+        res.send(results[0].topics)
+    } catch (e) {
+        res.send(e)
+    }
+})
+
+app.put('/topics/:id', async (req, res) => {
+    const id = req.params.id
+    const data = req.body
+
+    console.log(data)
+
+    try {
+        const client = await connect();
+        const db = client.db("users");
+        const collection = db.collection("users");
+        const updateResult = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { topics: data } })
+        if (updateResult.modifiedCount === 1) {
+            res.send(true)
+        } else {
+            res.send(false)
+        }
+    } catch (err) {
+        console.error(err)
+        res.status(500)
+    }
+
 })
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body
+
     try {
         const client = await connect();
         const db = client.db("users");
@@ -69,9 +146,11 @@ app.post('/login', async (req, res) => {
         } else {
             res.send('email')
         }
+
+
     } catch (err) {
         console.error(err)
-        res.sendStatus(500)
+        res.status(500)
     }
 })
 
@@ -84,14 +163,9 @@ app.get('/user/:id', async (req, res) => {
         const query = { _id: new ObjectId(id) }
         const cursor = collection.find(query)
         const results = await cursor.toArray()
-        if (results.length > 0) {
-            res.json({data:results[0].niches});
-        } else {
-            res.status(404).send({ message: 'User  not found' }); // Send a 404 status if user not found
-        }
+        res.send(results[0].niches)
     } catch (e) {
         console.log(e)
-        res.sendStatus(500);
     }
 })
 

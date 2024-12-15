@@ -64,7 +64,7 @@ input:focus {
 }
 
 button {
-  padding: 7px 8px;
+  padding: 10px 12px;
   width: 100%;
   text-align: center;
   border: none;
@@ -299,4 +299,8 @@ nav ul li {
   margin-left: 40px;
   list-style-type: none;
   cursor: pointer;
+}
+
+#auth_screen {
+  background-image: url('./assets/images/bg.jpg');
 }

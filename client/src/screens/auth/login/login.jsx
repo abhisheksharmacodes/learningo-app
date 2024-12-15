@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import logo from '../../../assets/images/logo.png'
 
-import './login.css'
+import "../../../App.css"
 
 const Login = () => {
 
@@ -31,7 +31,7 @@ const Login = () => {
             email: user_email.current.value,
             password: pass.current.value
         }
-        axios.post('https://newzlash-api.vercel.app/login', user_data).then((data) => {
+        axios.post('http://localhost:5000/login', user_data).then((data) => {
             if (data.data == 'email') {
                 setError(true)
                 setErrorStatement('Email not found')
@@ -43,36 +43,33 @@ const Login = () => {
                 localStorage.setItem('loggedIn', 'true')
                 localStorage.setItem('email', user_email.current.value)
                 localStorage.setItem('name', data.data.fname)
+                localStorage.setItem('topics', data.data.topics)
+                console.log(data.data.topics)
+                localStorage.setItem('lg', data.data.niches)
                 navigate('/dashboard')
             }
         })
     }
 
-
-    // const login = useGoogleLogin({
-    //     onSuccess: tokenResponse => alert(tokenResponse),
-    // });
-
-    return <div className="flex login screen" id="login_screen" style={{gap:'0px'}}>
-        {/* <img src={logo} className="logo"/> */}
-        <div className="container flex">
-            <span className="title">Log in</span>
-            <div className="hr"></div>
-            <div className="flex container_sections">
+    return <div className={`flex screen`} id={'auth_screen'} style={{gap:'0px'}}>
+        <div className={`container flex`}>
+            <span className='title'>Log in</span>
+            <div className='hr'></div>
+            <div className='flex'>
                 <form>
-                    <div className="flex" style={{ gap: '7px' }}>
+                    <div className='flex' style={{ gap: '7px' }}>
                         <input type="email" ref={user_email} onChange={validate} placeholder="Email"></input>
-                        <input maxLength={20} onChange={validate} type="password" id="pass" ref={pass} placeholder="Password"></input>
+                        <input maxLength={20} onChange={validate} type="password" id={parent.pass} ref={pass} placeholder="Password"></input>
                     </div>
                 </form>
                 <div style={{width:'100%'}}>
                     <button onClick={requestLogin} disabled={!valid}>Log in</button>
-                    <span className="error_text" style={{ display: error ? 'block' : 'none', marginTop:'8px' }}>{errorStatement}</span>
+                    <span className='error_text' style={{ display: error ? 'block' : 'none', marginTop:'8px' }}>{errorStatement}</span>
                 </div>
 
             </div>
-            <div className="container_sections flex">
-                <Link to="/signup" className="link_text">Don't have an account?</Link>
+            <div className='flex'>
+                <Link to="/signup" className='link_text'>Don't have an account?</Link>
             </div>
         </div>
     </div>

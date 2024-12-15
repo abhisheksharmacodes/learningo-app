@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom"
 
 import axios from 'axios'
 
-import '../../../App.css'
-import './signup.css'
+import "../../../App.css"
+import styles from './signup.module.css'
 
 const Signup = () => {
 
@@ -13,7 +13,7 @@ const Signup = () => {
     const email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
     const [valid, setValid] = useState(false)
-    const [error,setError] = useState(false)
+    const [error, setError] = useState(false)
 
     const fname = useRef(null)
     const pass = useRef(null)
@@ -26,41 +26,49 @@ const Signup = () => {
     const Weak_ = useRef(null)
     const Moderate_ = useRef(null)
 
+    // Class toggles
+    const [_useremail, _setUseremail] = useState(false)
+    const [_pass, _setPass] = useState(false)
+    const [_repass, _setRepass] = useState(false)
+    const [_veryWeak_, _setveryWeak_] = useState(false)
+    const [_Weak_, _setWeak_] = useState(false)
+    const [_Moderate_, _setModerate_] = useState(false)
+
     let password_strength = () => {
 
         let password = pass.current.value
 
         if (password === '') {
-            veryWeak_.current.classList = ''
-            Weak_.current.classList = ''
-            Moderate_.current.classList = ''
+            _setveryWeak_(false)
+            _setWeak_(false)
+            _setModerate_(false)
             passMessage.current.innerText = "Add Capital and Small letters"
             setValid(false)
-            pass.current.classList = 'error'
+            _setPass(true)
             return
         }
 
         if (/[a-zA-Z]/.test(password)) {
-            pass.current.classList = 'error'
+            _setPass(true)
             setValid(false)
             passMessage.current.innerText = "Add numbers"
-            veryWeak_.current.classList = 'green_status'
-            Weak_.current.classList = ''
-            Moderate_.current.classList = ''
+            _setveryWeak_(true)
+            _setWeak_(false)
+            _setModerate_(false)
             if (/[0-9]/.test(password)) {
-                pass.current.classList = 'error'
+                _setPass(true)
                 setValid(false)
                 passMessage.current.innerText = "Add special characters"
-                veryWeak_.current.classList = 'green_status'
-                Weak_.current.classList = 'green_status'
-                Moderate_.current.classList = ''
+                _setveryWeak_(true)
+                _setWeak_(true)
+                _setModerate_(false)
                 if (/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#£_()/=+$!%*?&])[A-Za-z\d@#£_()/=+$!%*?&]/.test(password)) {
                     if (pass.current.value === repass.current.value) setValid(true)
-                    pass.current.classList = ''
+                    _setPass(false)
                     passMessage.current.innerText = ""
-                    veryWeak_.current.classList = 'green_status'
-                    Weak_.current.classList = 'green_status'
-                    Moderate_.current.classList = 'green_status'
+                    _setveryWeak_(true)
+                    _setWeak_(true)
+                    _setModerate_(true)
                 }
             }
         }
@@ -71,22 +79,22 @@ const Signup = () => {
         if (email.test(user_email.current.value)) {
             setValid(true)
             validate()
-            user_email.current.classList = ''
+            _setUseremail(false)
         } else {
             setValid(false)
-            user_email.current.classList = 'error'
+            _setUseremail(true)
         }
     }
 
     let validate = () => {
         if (fname.current.value !== '' && user_email.current.value !== '' && pass.current.value !== '') {
             if (pass.current.value === repass.current.value) {
-                repass.current.classList = ''
+                _setRepass(false)
                 setValid(true)
                 password_strength()
                 return
             } else {
-                repass.current.classList = 'error'
+                _setRepass(true)
                 setValid(false)
                 password_strength()
                 return
@@ -100,50 +108,52 @@ const Signup = () => {
             fname: fname.current.value,
             email: user_email.current.value,
             password: pass.current.value,
-            niches: [0]
+            niches: [0],
+            topics: []
         }
-        axios.post('https://newzlash-api.vercel.app/adduser', user_data).then((data) => {
+        axios.post('http://localhost:5000/adduser', user_data).then((data) => {
             localStorage.setItem('id', data.data)
             localStorage.setItem('loggedIn', 'true')
             localStorage.setItem('email', user_email.current.value)
             localStorage.setItem('name', fname.current.value)
+            localStorage.setItem('topics', [])
             navigate("/dashboard")
         }).catch((e) => {
             setError(true)
         })
     }
 
-    return <div className="flex login screen" id="login_screen" style={{gap:'0px'}}>
-    {/* <img src={logo} className="logo"/> */}
-    <div className="container flex">
-            <span className="title">Sign up</span>
-            <div className="hr"></div>
-            <div className="flex container_sections">
-                <form>
-                    <div style={{display:'flex', gap:'10px', flexDirection: 'column'}}>
+    return <div className={'flex screen'} id='auth_screen'>
+
+        <div className={`flex container`} >
+            <span className='title'>Sign up</span>
+            <div className='hr'></div>
+            <div className='flex'>
+                <form style={{ marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
                         <input ref={fname} maxLength={35} placeholder="Name"></input>
-                        <div className="normal_flex">
-                            <input type="email" ref={user_email} onChange={emailValidate} placeholder="Email"></input>
+                        <div className='normal_flex'>
+                            <input type="email" ref={user_email} className={_useremail ? 'error' : ``} onChange={emailValidate} placeholder="Email"></input>
                         </div>
-                        <div className="normal_flex" style={{flexDirection:'column'}}>
-                            <input maxLength={20} onChange={validate} onFocus={() => checkPass.current.style.display = 'flex'} onBlur={() => checkPass.current.style.display = 'none'} type="password" id="pass" ref={pass} onInput={password_strength} placeholder="Password"></input>
-                            <div ref={checkPass} style={{display:'none',gap:'10px'}} id="pass_status" className="flex">
-                                <div className="password_status">
-                                    <div ref={veryWeak_}></div>
-                                    <div ref={Weak_}></div>
-                                    <div ref={Moderate_}></div>
+                        <div className='normal_flex' style={{ flexDirection: 'column' }}>
+                            <input maxLength={20} className={_pass ? 'error' : ``} onChange={validate} onFocus={() => checkPass.current.style.display = 'flex'} onBlur={() => checkPass.current.style.display = 'none'} type="password" id={styles.pass} ref={pass} onInput={password_strength} placeholder="Password"></input>
+                            <div ref={checkPass} style={{ display: 'none', gap: '10px' }} className='flex'>
+                                <div className={styles.password_status}>
+                                    <div className={_veryWeak_ ? styles.green_status : ``} ref={veryWeak_}></div>
+                                    <div className={_Weak_ ? styles.green_status : ``} ref={Weak_}></div>
+                                    <div className={_Moderate_ ? styles.green_status : ``} ref={Moderate_}></div>
                                 </div>
-                                <span className="info_text" ref={passMessage}>Add capital and small letters</span>
+                                <span className={styles.info_text} ref={passMessage}>Add capital and small letters</span>
                             </div>
                         </div>
-                        <input maxLength={20} type="password" id="repass" ref={repass} onInput={validate} placeholder="Re-enter password"></input>
+                        <input maxLength={20} type="password" id={'repass'} ref={repass} onInput={validate} placeholder="Re-enter password" className={_repass ? 'error' : ``}></input>
                     </div>
                 </form>
                 <button disabled={!valid} onClick={addUser}>Sign up</button>
-                <span className="error_text" style={{ display: error ? 'block' : 'none' }}>Something went wrong</span>
+                <span className={'error'} style={{ display: error ? 'block' : 'none' }}>Something went wrong</span>
             </div>
-            <div className="container_sections flex">
-                <Link to="/login" className="link_text">Already have an account?</Link>
+            <div className={'flex'}>
+                <Link to="/login" className={'link_text'}>Already have an account?</Link>
             </div>
         </div> </div>
 }

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 import logo from '../../assets/images/logo1.png'
+import menu from '../../assets/images/menu.png'
 import arrow from '../../assets/images/arrow.svg'
 import coin from '../../assets/images/coin.svg'
 import search from '../../assets/images/search.svg'
@@ -11,7 +12,6 @@ import loading from '../../assets/images/loading.gif'
 
 import axios from 'axios'
 
-import '../../App.css'
 import './dashboard.css'
 
 const API_KEY = 'AIzaSyBLoGQC0Ly4xbc7AVBIcxqWeQ7Lm3scvoo'; // Assuming you've set the API key in .env
@@ -26,16 +26,17 @@ const geminiConfig = {
 const Dashboard = () => {
 
     const [queue, setQueue] = useState([])
-    const [topics, setTopics] = useState('Pedagogy')
-    const [level, setLevel] = useState(localStorage.getItem('level')?localStorage.getItem('level'):'Beginner')
+    const [topics, setTopics] = useState('How to concentrate')
+    const [level, setLevel] = useState(localStorage.getItem('level') ? localStorage.getItem('level') : 'Beginner')
     const [ready, setReady] = useState(false)
     const [askSomethingElse, setAskSomethingElse] = useState(false)
     const [index, setIndex] = useState(0)
     const [test, setTest] = useState([])
     const [color, setColor] = useState('black')
     const [option, setOption] = useState('Next')
-    const [lang, setLang] = useState(localStorage.getItem('lang')?localStorage.getItem('lang'):'english')
-    const [LG, setLG] = useState(null)
+    const [lang, setLang] = useState(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'english')
+    const [LG, setLG] = useState(localStorage.getItem('lg') ? parseInt(localStorage.getItem('lg')) : 0)
+    const [yourTopics, setYourTopics] = useState(localStorage.getItem('topics') ? localStorage.getItem('topics').split(",") : [])
 
     // UI variables
     const [blurShow, setBlurShow] = useState(false)
@@ -45,7 +46,6 @@ const Dashboard = () => {
     const [right, setRight] = useState(0)
 
     const topic = useRef(null)
-    const langText = useRef(null)
     const buttonRefs = useRef([]);
 
     const answer = useRef('');
@@ -201,83 +201,105 @@ const Dashboard = () => {
     ]
 
     let accordionData = []
-    
+
+    if (yourTopics.length > 0) {
+        accordionData.push(
+            {
+                title: "Your Topics",
+                content: <nav><ul>{yourTopics.map(item => <li className="topic" onClick={() => { setTopics(item); topic.current.value = "" }}>{item}</li>)}</ul></nav>
+            }
+        )
+    }
 
     for (let i = 0; i < categories.length; i++) {
         accordionData.push(
             {
                 title: categories[i].name,
-                content: <nav><ul>{categories[i].content.map(item => <li onClick={() => { setTopics(item); topic.current.value = "" }}>{item}</li>)}</ul></nav>
+                content: <nav><ul>{categories[i].content.map(item => <li className="topic" onClick={() => { setTopics(item); topic.current.value = "" }}>{item}</li>)}</ul></nav>
             }
         )
     }
 
     const languages = [
-        "Akan",
-        "Akan",
-        "Amharic",
         "Amharic",
         "Arabic",
+        "Assamese",
+        "Awadhi",
+        "Azerbaijani",
+        "Belarusian",
         "Bengali",
-        "Burmese",
+        "Bhojpuri",
+        "Bulgarian",
         "Burmese",
         "Cebuano",
-        "Chichewa",
-        "Chichewa",
+        "Chhattisgarhi",
+        "Chinese",
+        "Chittagonian",
+        "Czech",
+        "Deccan",
+        "Dutch",
         "English",
+        "Farsi",
         "French",
-        "Fula",
-        "Fula",
+        "Fulfulde",
         "German",
+        "Greek",
         "Gujarati",
+        "Haitian",
+        "Haryanvi",
         "Hausa",
-        "Hmong",
-        "Hmong",
+        "Hindi",
+        "Hungarian",
         "Igbo",
-        "Igbo",
+        "Ilocano",
+        "Indonesian",
         "Italian",
         "Japanese",
         "Javanese",
+        "Kazakh",
         "Kannada",
-        "Kazakh",
-        "Kazakh",
-        "Khmer",
-        "Kinyarwanda",
-        "Kinyarwanda",
-        "Kirundi",
-        "Kirundi",
         "Korean",
-        "Maithili",
-        "Maithili",
-        "Malagasy",
-        "Malagasy",
+        "Lombard",
+        "Magahi",
         "Malay",
+        "Malayalam",
+        "Malagasy",
+        "Madura",
+        "Maithili",
         "Marathi",
         "Marwari",
-        "Marwari",
-        "Odia",
-        "Odia",
+        "Nepali",
+        "Oriya",
+        "Oromo",
+        "Pashto",
+        "Polish",
         "Portuguese",
         "Punjabi",
+        "Romanian",
         "Russian",
+        "Saraiki",
+        "Serbo-Croatian",
         "Sindhi",
-        "Sinhalese",
-        "Sinhalese",
-        "Somali",
+        "Sinhala",
         "Somali",
         "Spanish",
-        "Sundanese",
-        "Sundanese",
-        "Swahili",
-        "Swahili",
+        "Sunda",
+        "Swedish",
+        "Tagalog",
         "Tamil",
+        "Tatar",
         "Telugu",
+        "Thai",
         "Turkish",
+        "Uyghur",
         "Ukrainian",
         "Urdu",
+        "Uzbek",
         "Vietnamese",
-        "Yoruba"
-    ]
+        "Yoruba",
+        "Zulu",
+        "Zhuang"
+    ];
 
     const generate = async () => {
         setAskSomethingElse(false)
@@ -290,7 +312,7 @@ const Dashboard = () => {
                 geminiConfig,
             });
 
-            const prompt = `output an array (enclosed in [ and ]. don't put '\`' sign anywhere) of 5 valid json strings (separated by commas) each representing a ${level} level question about ${topics} in ${lang} language. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options strictly (double check it). then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
+            const prompt = `output an array (enclosed in [ and ]. don't put '\`' sign anywhere) of 5 valid json strings (separated by commas) each representing a ${level} level question about ${topics}. questions should be in ${lang} language. question and answer should be in json format as follows: {"question":"question","options":["a","b","c","d"],"answer":""}. the answer should not be in a,b,c,d but from whole option. options should be an array of four strings only. the answer should exactly match letter by letter with one of the options strictly (double check it). then only output the array of 5 json strings. example json output: {"question":"what is computer", "options":["a machine", "a pen", "a box", "a paper"], "answer": "a machine"}`;
             const result = await geminiModel.generateContent(prompt);
             const responseText = JSON.parse(result.response.text())
             if (responseText === 'false') {
@@ -319,7 +341,7 @@ const Dashboard = () => {
         if (option === answer.current) {
             buttonRefs.current[option].className = 'option right_option'
             setRight(right + 1)
-            console.log(right)
+            // console.log(right)
         } else {
             buttonRefs.current[option].className = 'option wrong_option'
             buttonRefs.current[answer.current].className = 'option right_option'
@@ -328,10 +350,6 @@ const Dashboard = () => {
 
     useEffect(() => {
         checkStatus()
-        axios.get('https://newzlash-api.vercel.app/user/' + localStorage.getItem('id')).then((data) => {
-            setLG(parseInt(data.data[0]))
-            localStorage.setItem('lg', parseInt(data.data[0]))
-        })
     }, [])
 
     useEffect(() => {
@@ -341,7 +359,7 @@ const Dashboard = () => {
     }, [topics]);
 
     useEffect(() => {
-        localStorage.setItem('lang',lang)
+        localStorage.setItem('lang', lang)
         generate()
     }, [lang]);
 
@@ -358,7 +376,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         answer.current = queue[index]?.answer
-        console.log(answer.current)
+        // console.log(answer.current)
         if (index == queue.length - 1) { setOption('More') } else { setOption('Next') }
         queue[index]?.options.forEach(option => {
             buttonRefs.current[option].className = 'option normal'
@@ -366,9 +384,16 @@ const Dashboard = () => {
     }, [index])
 
     useEffect(() => {
-        localStorage.setItem('level',level)
+        localStorage.setItem('level', level)
         generate()
     }, [level])
+
+    useEffect(() => {
+        localStorage.setItem('topics', yourTopics.join(","))
+        axios.put('http://localhost:5000/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
+            console.log('updated')
+        })
+    }, [yourTopics])
 
     const Accordion = ({ title, content }) => {
         const [isActive, setIsActive] = useState(false);
@@ -398,10 +423,19 @@ const Dashboard = () => {
 
     const more = () => {
         if (index == queue.length - 1) {
-            let new_lg = parseInt(localStorage.getItem('lg')) + Math.floor((right + 5) * right / 5)
+            let new_points = Math.floor((right + 5) * right / 5)
+            switch (level) {
+                case 'Intermediate':
+                    new_points = Math.floor(new_points * 1.5)
+                    break
+                case 'Advance':
+                    new_points = new_points * 2
+                    break
+            }
+            let new_lg = parseInt(localStorage.getItem('lg')) + new_points
             setLG(new_lg)
             localStorage.setItem('lg', new_lg.toString())
-            axios.put('https://newzlash-api.vercel.app/niches/' + localStorage.getItem('id'), [parseInt(new_lg)]).then(() => {
+            axios.put('http://localhost:5000/niches/' + localStorage.getItem('id'), [parseInt(new_lg)]).then(() => {
                 navigate('/dashboard')
             })
             generate()
@@ -411,10 +445,37 @@ const Dashboard = () => {
         }
     }
 
-    return <div id="auth_screen" className="screen" style={{ height: '100%' }}>
+    const handleCheckTopic = async (checkTopic) => {
+        const googleAI = new GoogleGenerativeAI(API_KEY)
+        const geminiModel = googleAI.getGenerativeModel({
+            model: "gemini-pro",
+            geminiConfig,
+        });
+        const prompt = `it is a sentence "${checkTopic}". output true if 1. if it is  2. it is appropriate and doesn't contain bad words. otherwise false. just output true or false`;
+        const result = await geminiModel.generateContent(prompt);
+        const response = result.response.text()
+        console.log(response)
+        if (response.toString().toLowerCase() !== "false") {
+            setTopics(checkTopic)
+            if (!yourTopics.includes(checkTopic)) {
+                setYourTopics([...yourTopics, checkTopic])
+            }
+        }
+        else {
+            const animation = topic.current.animate([
+                { boxShadow: 'inset 0px 0px 5px 2px rgba(255, 0, 0, .5)' }, // Start from invisible
+                { boxShadow: 'none' }  // Animate to fully visible
+            ], {
+                duration: 400, // Animation duration in milliseconds
+                fill: 'forwards'  // Keep the final state after animation
+            });
+        }
+    }
+
+    return <div className="screen" style={{ height: '100%' }}>
         <div id="dash_container" className="flex">
             <div id="blur" style={{ display: (blurShow ? 'flex' : 'none') }}>
-                <div onClick={()=>{initial();setBlurShow(false)}} style={{ height: '100%', width: '100%', background: 'transparent', position: 'fixed' }} id="back"></div>
+                <div onClick={() => { initial(); setBlurShow(false) }} style={{ height: '100%', width: '100%', background: 'transparent', position: 'fixed' }} id="back"></div>
                 <div className="options level" style={{ display: (levelShow ? 'flex' : 'none') }}>
                     <nav>
                         <ul>
@@ -429,19 +490,59 @@ const Dashboard = () => {
                     <p>Elevate your learning experience with our AI-powered MCQ practice platform. Our platform offers a wide range of subjects and topics, allowing you to customize your practice sessions to your specific needs. With our dynamic question generation and diverse practice modes, you can effectively prepare for exams and improve your understanding of the subject matter. Our platform provides a user-friendly interface and is accessible from any device, making it the perfect tool for students of all levels.</p>
                 </div>
                 <div className="options lang normal_flex" style={{ display: (langShow ? 'flex' : 'none') }}>
-                    <div className="search_text" style={{ display: 'flex', width: '100%' }}>
-                        {/* <button onClick={generate}>generate</button> */}
-                        <input ref={langText} onKeyDown={(e) => { if (e.key === 'Enter') { initial();setBlurShow();setLang(langText.current.value) } }} type="text" maxLength={70} placeholder="Enter your language" />
-                        <img src={search} alt="search" class="search" />
-                    </div>
+                    <h2>Choose your language</h2>
                     <div id="langs" className="normal_flex">
-                        {languages.map((lang)=><span>{lang}</span>)}
+                        <div className="lang_section">
+                            {languages.slice(0, 9).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(10, 19).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(20, 29).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(30, 39).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(40, 49).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(50, 59).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(60, 69).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(70, 79).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
                     </div>
                 </div>
             </div>
-            <header className="flex header">
-                <img className="logo" src={logo} alt="logo" />
+            <div id="min-nav">
                 <nav>
+                    <ul>
+                        <li onClick={() => { initial(); setLangShow(true) }}>
+                            <span className="langtext">{lang}</span>
+                            <img className="arrow" src={arrow} alt="" />
+                        </li>
+                        <li onClick={() => { initial(); setLevelShow(true) }}>
+                            {level}
+                            <img className="arrow" src={arrow} alt="" />
+                        </li>
+                        <li onClick={() => { initial(); setAboutShow(true) }}>
+                            About
+                        </li>
+                        <li onClick={() => { localStorage.clear(); navigate('/login') }}>
+                            Log out
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <header className="flex header">
+                <img id="burger" src={menu} alt="burger" />
+                <img className="logo" src={logo} alt="logo" />
+                <nav id="max-nav">
                     <ul>
                         <li onClick={() => { initial(); setLangShow(true) }}>
                             <span className="langtext">{lang}</span>
@@ -467,10 +568,13 @@ const Dashboard = () => {
             <div className="normal_flex" id="content">
                 <section id="topics" className="flex">
                     <span className="title">Topics</span>
-                    <div className="search_text" style={{ display: 'flex', width: '100%' }}>
-                        {/* <button onClick={generate}>generate</button> */}
-                        <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { setTopics(topic.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" />
-                        <img src={search} alt="search" class="search" />
+                    <div id="search_area">
+                        <div className="search_text" style={{ display: 'flex', width: '100%' }}>
+                            {/* <button onClick={generate}>generate</button> */}
+                            <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { handleCheckTopic(topic.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" />
+                            <img src={search} alt="search" class="search" />
+                        </div>
+                        {/* <span className="error_text" style={{marginTop:'25px'}}>Try something else</span> */}
                     </div>
                     <div className="normal_flex" id="categories">
                         {accordionData.map(({ title, content }) => (
@@ -483,7 +587,7 @@ const Dashboard = () => {
                         <span className="title">Practice</span>
                         <span className="title" style={{ opacity: '.7', display: 'block' }}>{topics}</span>
                     </div>
-                    {ready ? (askSomethingElse ? <span className="title">Ask something else</span> : <><h1 style={{ textAlign: 'center' }}>{queue[index]?.question}</h1>
+                    {ready ? (askSomethingElse ? <span className="title">Ask something else</span> : <><h1 style={{ textAlign: 'center', fontSize: '1.5em' }}>{queue[index]?.question}</h1>
                         <div id="options" className="flex">
                             {queue[index]?.options?.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => { handleAnswerClick(option) }} className='option normal'>{option}</div>)}
                         </div>

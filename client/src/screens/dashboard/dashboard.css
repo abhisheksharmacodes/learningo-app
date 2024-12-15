@@ -30,7 +30,7 @@
 
 .about,
 .lang {
-    padding: 20px;
+    padding: 30px;
 }
 
 .about {
@@ -58,7 +58,7 @@
 }
 
 #blur ul li:last-child {
-    border-radius: 0 0 15px 15px;    
+    border-radius: 0 0 15px 15px;
     border: none;
 }
 
@@ -69,11 +69,29 @@
 #langs {
     flex-direction: row;
     flex-wrap: wrap;
-    gap:10px;
+    gap: 35px;
     width: 100%;
     justify-content: center;
-    align-items: left;
-    margin-top: 20px;
+    align-items: start;
+    margin-top: 30px;
+}
+
+.lang_section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.lang_section span {
+    opacity: .8;
+    cursor: pointer;
+    transition: .4s;
+}
+
+.lang_section span:hover {
+    opacity: 1;
 }
 
 #content {
@@ -82,6 +100,17 @@
     box-sizing: border-box;
     padding: 30px;
     gap: 30px;
+}
+
+#burger {
+    height: 20px;
+    display: none;
+}
+
+#min-nav {
+    position: fixed;
+    z-index: 1;
+    left: -100%;
 }
 
 #topics,
@@ -109,6 +138,10 @@
     height: 20px;
     opacity: .8;
     transition: .4s;
+}
+
+#search_area {
+    width: 100%;
 }
 
 .search_text input {
@@ -168,6 +201,10 @@
     list-style-type: none;
     margin: 0;
     color: var(--gray2);
+}
+
+.topic::first-letter {
+    text-transform: capitalize;
 }
 
 .accordion-content ul li:hover {
@@ -230,4 +267,61 @@
     height: 125px;
     filter: grayscale(.7);
     opacity: .4;
+}
+
+.alert {
+    animation-name: alert;
+    animation-duration: 1s;
+}
+
+@keyframes alert {
+    from {
+        box-shadow: inset 0px 0px 5px 2px rgba(255, 0, 0, .5);
+    }
+
+    to {
+        box-shadow: none;
+    }
+
+    /* 0% {
+        border-color: var(--gray);
+    }
+
+    25% {
+        border-color: var(red);
+    }
+
+    50% {
+        border-color: var(--gray);
+    }
+
+    75% {
+        border-color: var(red);
+    }
+
+    100% {
+        border-color: var(--gray);
+    } */
+}
+
+@media screen and (max-width:880px) {
+    #content {
+        flex-direction: column-reverse;
+    }
+
+    #practice,
+    #topics {
+        width: 100%;
+        padding: 40px;
+    }
+}
+
+@media screen and (max-width:768px) {
+    #burger {
+        display: block;
+    }
+
+    #max-nav {
+        display: none;
+    }
 }
