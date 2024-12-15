@@ -207,7 +207,7 @@ const Dashboard = () => {
         accordionData.push(
             {
                 title: "Your Topics",
-                content: <nav><ul>{yourTopics.map(item => <li className="topic" onClick={() => { setTopics(item); topic.current.value = "" }}>{item}</li>)}</ul></nav>
+                content: <nav><ul>{yourTopics.map(item => <li key={item} className="topic" onClick={() => { setTopics(item); topic.current.value = "" }}>{item}</li>)}</ul></nav>
             }
         )
     }
@@ -335,16 +335,16 @@ const Dashboard = () => {
     };
 
     const handleAnswerClick = (option) => {
-        // console.log(`
+        // // console.log(`
         //     option: ${option},\n
         //     answer: ${answer.current},\n
         //     index: ${index},\n 
         // `)
-        // console.log(queue[index])
+        // // console.log(queue[index])
         if (option === answer.current) {
             buttonRefs.current[option].className = 'option right_option'
             setRight(right + 1)
-            // console.log(right)
+            // // console.log(right)
         } else {
             buttonRefs.current[option].className = 'option wrong_option'
             buttonRefs.current[answer.current].className = 'option right_option'
@@ -367,19 +367,19 @@ const Dashboard = () => {
     }, [lang]);
 
     useEffect(() => {
-        // console.log('test' + test)
+        // // console.log('test' + test)
         setQueue(test)
     }, [test])
 
     useEffect(() => {
-        // console.log('queue' + queue)
+        // // console.log('queue' + queue)
         answer.current = queue[index]?.answer
-        // console.log(answer)
+        // // console.log(answer)
     }, [queue])
 
     useEffect(() => {
         answer.current = queue[index]?.answer
-        // console.log(answer.current)
+        // // console.log(answer.current)
         if (index == queue.length - 1) { setOption('More') } else { setOption('Next') }
         queue[index]?.options.forEach(option => {
             buttonRefs.current[option].className = 'option normal'
@@ -394,7 +394,7 @@ const Dashboard = () => {
     useEffect(() => {
         localStorage.setItem('topics', yourTopics.join(","))
         axios.put('http://localhost:5000/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
-            // console.log('updated')
+            // // console.log('updated')
         })
     }, [yourTopics])
 
@@ -457,7 +457,7 @@ const Dashboard = () => {
         const prompt = `it is a sentence "${checkTopic}". output true if 1. if it is  2. it is appropriate and doesn't contain bad words. otherwise false. just output true or false`;
         const result = await geminiModel.generateContent(prompt);
         const response = result.response.text()
-        // console.log(response)
+        // // console.log(response)
         if (response.toString().toLowerCase() !== "false") {
             setTopics(checkTopic)
             if (!yourTopics.includes(checkTopic)) {
@@ -574,10 +574,9 @@ const Dashboard = () => {
                     <div id="search_area">
                         <div className="search_text" style={{ display: 'flex', width: '100%' }}>
                             {/* <button onClick={generate}>generate</button> */}
-                            <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { handleCheckTopic(topic.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" />
+                            <input name="name"ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { handleCheckTopic(topic.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" autoComplete="true" />
                             <img src={search} alt="search" className="search" />
                         </div>
-                        {/* <span className="error_text" style={{marginTop:'25px'}}>Try something else</span> */}
                     </div>
                     <div className="normal_flex" id="categories">
                         {accordionData.map(({ title, content }) => (

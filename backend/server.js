@@ -17,7 +17,7 @@ async function connect() {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        console.log("Connected to MongoDB");
+        // console.log("Connected to MongoDB");
         return cachedClient;
     } catch (e) {
         console.error(e);
@@ -40,9 +40,9 @@ app.post('/adduser', async (req, res) => {
 
         const result = await collection.insertOne(data)
         res.send(result.insertedId.toString())
-        console.log("Inserted")
+        // console.log("Inserted")
     } catch (e) {
-        console.log(e)
+        // console.log(e)
         res.status(500).json({ message: 'Error' })
     }
 })
@@ -104,7 +104,7 @@ app.put('/topics/:id', async (req, res) => {
     const id = req.params.id
     const data = req.body
 
-    console.log(data)
+    // console.log(data)
 
     try {
         const client = await connect();
@@ -134,7 +134,7 @@ app.post('/login', async (req, res) => {
         const cursor = collection.find(query)
         const results = await cursor.toArray()
 
-        console.log(results.length ? 'email found' : 'not found')
+        // console.log(results.length ? 'email found' : 'not found')
 
         if (results.length) {
             if (password === results[0].password) {
@@ -165,11 +165,11 @@ app.get('/user/:id', async (req, res) => {
         const results = await cursor.toArray()
         res.send(results[0].niches)
     } catch (e) {
-        console.log(e)
+        // console.log(e)
     }
 })
 
 app.listen(port, () => {
-    console.log('Listening at port ' + port)
+    // console.log('Listening at port ' + port)
 })
 

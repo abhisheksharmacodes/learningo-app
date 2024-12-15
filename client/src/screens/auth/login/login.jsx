@@ -58,8 +58,8 @@ const Login = () => {
             <div className='flex'>
                 <form>
                     <div className='flex' style={{ gap: '7px' }}>
-                        <input type="email" ref={user_email} onChange={validate} placeholder="Email"></input>
-                        <input maxLength={20} onChange={validate} type="password" id={parent.pass} ref={pass} placeholder="Password"></input>
+                        <input name="name"type="email" ref={user_email} onChange={validate} placeholder="Email"></input>
+                        <input name="name"maxLength={20} onChange={validate} type="password" id={parent.pass} ref={pass} placeholder="Password"></input>
                     </div>
                 </form>
                 <div style={{width:'100%'}}>

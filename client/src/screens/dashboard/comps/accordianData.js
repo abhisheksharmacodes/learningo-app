@@ -145,7 +145,7 @@ const categories = [
 
 let accordionData = []
 
-// console.log(categories[0].content)
+// // console.log(categories[0].content)
 
 for (let i = 0; i < categories.length; i++) {
     let content = <></>

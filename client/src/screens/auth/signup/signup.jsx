@@ -117,6 +117,7 @@ const Signup = () => {
             localStorage.setItem('email', user_email.current.value)
             localStorage.setItem('name', fname.current.value)
             localStorage.setItem('topics', [])
+            localStorage.setItem('lg', '0')
             navigate("/dashboard")
         }).catch((e) => {
             setError(true)
@@ -129,14 +130,14 @@ const Signup = () => {
             <span className='title'>Sign up</span>
             <div className='hr'></div>
             <div className='flex'>
-                <form>
+                <form style={{ marginBottom: '20px' }}>
                     <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
-                        <input ref={fname} maxLength={35} placeholder="Name"></input>
+                        <input name="name"ref={fname} maxLength={35} placeholder="Name"></input>
                         <div className='normal_flex'>
-                            <input type="email" ref={user_email} className={_useremail ? 'error' : ``} onChange={emailValidate} placeholder="Email"></input>
+                            <input name="name"type="email" ref={user_email} className={_useremail ? 'error' : ``} onChange={emailValidate} placeholder="Email"></input>
                         </div>
                         <div className='normal_flex' style={{ flexDirection: 'column' }}>
-                            <input maxLength={20} className={_pass ? 'error' : ``} onChange={validate} onFocus={() => checkPass.current.style.display = 'flex'} onBlur={() => checkPass.current.style.display = 'none'} type="password" id={styles.pass} ref={pass} onInput={password_strength} placeholder="Password"></input>
+                            <input name="name"maxLength={20} className={_pass ? 'error' : ``} onChange={validate} onFocus={() => checkPass.current.style.display = 'flex'} onBlur={() => checkPass.current.style.display = 'none'} type="password" id={styles.pass} ref={pass} onInput={password_strength} placeholder="Password"></input>
                             <div ref={checkPass} style={{ display: 'none', gap: '10px' }} className='flex'>
                                 <div className={styles.password_status}>
                                     <div className={_veryWeak_ ? styles.green_status : ``} ref={veryWeak_}></div>
@@ -146,11 +147,11 @@ const Signup = () => {
                                 <span className={styles.info_text} ref={passMessage}>Add capital and small letters</span>
                             </div>
                         </div>
-                        <input maxLength={20} type="password" id={'repass'} ref={repass} onInput={validate} placeholder="Re-enter password" className={_repass ? 'error' : ``}></input>
+                        <input name="name"maxLength={20} type="password" id={'repass'} ref={repass} onInput={validate} placeholder="Re-enter password" className={_repass ? 'error' : ``}></input>
                     </div>
                 </form>
-                <button disabled={!valid} onClick={addUser} style={{marginTop:'0'}}>Sign up</button>
-                <span className={'error_text'} style={{ display: error ? 'block' : 'none' }}>Something went wrong</span>
+                <button disabled={!valid} onClick={addUser}>Sign up</button>
+                <span className={'error'} style={{ display: error ? 'block' : 'none' }}>Something went wrong</span>
             </div>
             <div className={'flex'}>
                 <Link to="/login" className={'link_text'}>Already have an account?</Link>
