@@ -216,7 +216,7 @@ const Dashboard = () => {
         accordionData.push(
             {
                 title: categories[i].name,
-                content: <nav><ul>{categories[i].content.map(item => <li className="topic" onClick={() => { setTopics(item); topic.current.value = "" }}>{item}</li>)}</ul></nav>
+                content: <nav><ul>{categories[i].content.map(item => <li key={item} className="topic" onClick={() => { setTopics(item); topic.current.value = "" }}>{item}</li>)}</ul></nav>
             }
         )
     }
@@ -328,7 +328,9 @@ const Dashboard = () => {
 
         } catch (error) {
             console.error("response error", error);
-            generate()
+            setTimeout(() => {
+                generate()
+            }, 1000)
         }
     };
 
@@ -494,28 +496,28 @@ const Dashboard = () => {
                     <h2>Choose your language</h2>
                     <div id="langs" className="normal_flex">
                         <div className="lang_section">
-                            {languages.slice(0, 9).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                            {languages.slice(0, 9).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span>)}
                         </div>
                         <div className="lang_section">
-                            {languages.slice(10, 19).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                            {languages.slice(10, 19).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span>)}
                         </div>
                         <div className="lang_section">
-                            {languages.slice(20, 29).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                            {languages.slice(20, 29).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span>)}
                         </div>
                         <div className="lang_section">
-                            {languages.slice(30, 39).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                            {languages.slice(30, 39).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span>)}
                         </div>
                         <div className="lang_section">
-                            {languages.slice(40, 49).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                            {languages.slice(40, 49).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span>)}
                         </div>
                         <div className="lang_section">
-                            {languages.slice(50, 59).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                            {languages.slice(50, 59).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span>)}
                         </div>
                         <div className="lang_section">
-                            {languages.slice(60, 69).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                            {languages.slice(60, 69).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span>)}
                         </div>
                         <div className="lang_section">
-                            {languages.slice(70, 79).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                            {languages.slice(70, 79).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }} key={langs} >{langs}</span>)}
                         </div>
                     </div>
                 </div>
@@ -573,13 +575,13 @@ const Dashboard = () => {
                         <div className="search_text" style={{ display: 'flex', width: '100%' }}>
                             {/* <button onClick={generate}>generate</button> */}
                             <input ref={topic} onKeyDown={(e) => { if (e.key === 'Enter') { handleCheckTopic(topic.current.value) } }} type="text" maxLength={70} placeholder="Enter a topic and practice" />
-                            <img src={search} alt="search" class="search" />
+                            <img src={search} alt="search" className="search" />
                         </div>
                         {/* <span className="error_text" style={{marginTop:'25px'}}>Try something else</span> */}
                     </div>
                     <div className="normal_flex" id="categories">
                         {accordionData.map(({ title, content }) => (
-                            <Accordion title={title} content={content} />
+                            <Accordion key={title} title={title} content={content} />
                         ))}
                     </div>
                 </section>
@@ -590,7 +592,7 @@ const Dashboard = () => {
                     </div>
                     {ready ? (askSomethingElse ? <span className="title">Ask something else</span> : <><h1 style={{ textAlign: 'center', fontSize: '1.5em' }}>{queue[index]?.question}</h1>
                         <div id="options" className="flex">
-                            {queue[index]?.options?.map((option, index) => <div ref={(el) => (buttonRefs.current[option] = el)} onClick={() => { handleAnswerClick(option) }} className='option normal'>{option}</div>)}
+                            {queue[index]?.options?.map((option, index) => <div key={option} ref={(el) => (buttonRefs.current[option] = el)} onClick={() => { handleAnswerClick(option) }} className='option normal'>{option}</div>)}
                         </div>
                         <div id="navigate">
                             <div style={{ color: color }} onClick={() => { if (index > 0) { setIndex(index - 1) } else { setColor('grey') } }}>
