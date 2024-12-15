@@ -129,7 +129,7 @@ const Signup = () => {
             <span className='title'>Sign up</span>
             <div className='hr'></div>
             <div className='flex'>
-                <form style={{ marginBottom: '20px' }}>
+                <form>
                     <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
                         <input ref={fname} maxLength={35} placeholder="Name"></input>
                         <div className='normal_flex'>
@@ -149,8 +149,8 @@ const Signup = () => {
                         <input maxLength={20} type="password" id={'repass'} ref={repass} onInput={validate} placeholder="Re-enter password" className={_repass ? 'error' : ``}></input>
                     </div>
                 </form>
-                <button disabled={!valid} onClick={addUser}>Sign up</button>
-                <span className={'error'} style={{ display: error ? 'block' : 'none' }}>Something went wrong</span>
+                <button disabled={!valid} onClick={addUser} style={{marginTop:'0'}}>Sign up</button>
+                <span className={'error_text'} style={{ display: error ? 'block' : 'none' }}>Something went wrong</span>
             </div>
             <div className={'flex'}>
                 <Link to="/login" className={'link_text'}>Already have an account?</Link>

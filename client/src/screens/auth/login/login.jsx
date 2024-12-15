@@ -44,7 +44,7 @@ const Login = () => {
                 localStorage.setItem('email', user_email.current.value)
                 localStorage.setItem('name', data.data.fname)
                 localStorage.setItem('topics', data.data.topics)
-                console.log(data.data.topics)
+                // console.log(data.data.topics)
                 localStorage.setItem('lg', data.data.niches)
                 navigate('/dashboard')
             }

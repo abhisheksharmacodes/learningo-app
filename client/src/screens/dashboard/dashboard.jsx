@@ -47,6 +47,7 @@ const Dashboard = () => {
 
     const topic = useRef(null)
     const buttonRefs = useRef([]);
+    const langText = useRef('');
 
     const answer = useRef('');
 
@@ -391,7 +392,7 @@ const Dashboard = () => {
     useEffect(() => {
         localStorage.setItem('topics', yourTopics.join(","))
         axios.put('http://localhost:5000/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
-            console.log('updated')
+            // console.log('updated')
         })
     }, [yourTopics])
 
@@ -454,7 +455,7 @@ const Dashboard = () => {
         const prompt = `it is a sentence "${checkTopic}". output true if 1. if it is  2. it is appropriate and doesn't contain bad words. otherwise false. just output true or false`;
         const result = await geminiModel.generateContent(prompt);
         const response = result.response.text()
-        console.log(response)
+        // console.log(response)
         if (response.toString().toLowerCase() !== "false") {
             setTopics(checkTopic)
             if (!yourTopics.includes(checkTopic)) {
@@ -490,13 +491,32 @@ const Dashboard = () => {
                     <p>Elevate your learning experience with our AI-powered MCQ practice platform. Our platform offers a wide range of subjects and topics, allowing you to customize your practice sessions to your specific needs. With our dynamic question generation and diverse practice modes, you can effectively prepare for exams and improve your understanding of the subject matter. Our platform provides a user-friendly interface and is accessible from any device, making it the perfect tool for students of all levels.</p>
                 </div>
                 <div className="options lang normal_flex" style={{ display: (langShow ? 'flex' : 'none') }}>
-                    <div className="search_text" style={{ display: 'flex', width: '100%' }}>
-                        {/* <button onClick={generate}>generate</button> */}
-                        <input ref={langText} onKeyDown={(e) => { if (e.key === 'Enter') { initial();setBlurShow();setLang(langText.current.value) } }} type="text" maxLength={70} placeholder="Enter your language" />
-                        <img src={search} alt="search" class="search" />
-                    </div>
+                    <h2>Choose your language</h2>
                     <div id="langs" className="normal_flex">
-                        {languages.map((lang)=><span>{lang}</span>)}
+                        <div className="lang_section">
+                            {languages.slice(0, 9).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(10, 19).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(20, 29).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(30, 39).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(40, 49).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(50, 59).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(60, 69).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
+                        <div className="lang_section">
+                            {languages.slice(70, 79).map((langs) => (langs == lang) ? <span style={{ opacity: 1, fontWeight: 'bold' }} onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span> : <span onClick={() => { initial(); setBlurShow(); setLang(langs) }}>{langs}</span>)}
+                        </div>
                     </div>
                 </div>
             </div>
