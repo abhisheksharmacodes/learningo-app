@@ -130,7 +130,7 @@ const Signup = () => {
             <span className='title'>Sign up</span>
             <div className='hr'></div>
             <div className='flex'>
-                <form style={{ marginBottom: '20px' }}>
+                <form>
                     <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
                         <input name="name"ref={fname} maxLength={35} placeholder="Name"></input>
                         <div className='normal_flex'>
