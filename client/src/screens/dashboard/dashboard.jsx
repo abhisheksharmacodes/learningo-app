@@ -393,7 +393,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         localStorage.setItem('topics', yourTopics.join(","))
-        axios.put('http://localhost:5000/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
+        axios.put('https://backend-tau-seven-71.vercel.app/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
             // // console.log('updated')
         })
     }, [yourTopics])
@@ -438,7 +438,7 @@ const Dashboard = () => {
             let new_lg = parseInt(localStorage.getItem('lg')) + new_points
             setLG(new_lg)
             localStorage.setItem('lg', new_lg.toString())
-            axios.put('http://localhost:5000/niches/' + localStorage.getItem('id'), [parseInt(new_lg)]).then(() => {
+            axios.put('https://backend-tau-seven-71.vercel.app/niches/' + localStorage.getItem('id'), [parseInt(new_lg)]).then(() => {
                 navigate('/dashboard')
             })
             generate()

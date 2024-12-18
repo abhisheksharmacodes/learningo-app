@@ -111,7 +111,7 @@ const Signup = () => {
             niches: [0],
             topics: []
         }
-        axios.post('http://localhost:5000/adduser', user_data).then((data) => {
+        axios.post('https://backend-tau-seven-71.vercel.app/adduser', user_data).then((data) => {
             localStorage.setItem('id', data.data)
             localStorage.setItem('loggedIn', 'true')
             localStorage.setItem('email', user_email.current.value)
@@ -151,7 +151,7 @@ const Signup = () => {
                     </div>
                 </form>
                 <button disabled={!valid} onClick={addUser}>Sign up</button>
-                <span className={'error'} style={{ display: error ? 'block' : 'none' }}>Something went wrong</span>
+                <span className={'error_text'} style={{ display: error ? 'block' : 'none' }}>Something went wrong</span>
             </div>
             <div className={'flex'}>
                 <Link to="/login" className={'link_text'}>Already have an account?</Link>
