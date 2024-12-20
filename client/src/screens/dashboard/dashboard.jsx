@@ -522,7 +522,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-            <div id="min-nav">
+            {/*<div id="min-nav">
                 <nav>
                     <ul>
                         <li onClick={() => { initial(); setLangShow(true) }}>
@@ -541,7 +541,7 @@ const Dashboard = () => {
                         </li>
                     </ul>
                 </nav>
-            </div>
+            </div>*/}
             <header className="flex header">
                 <img id="burger" src={menu} alt="burger" />
                 <img className="logo" src={logo} alt="logo" />
