@@ -496,6 +496,7 @@ const Dashboard = () => {
                 <div className="options about normal_flex" style={{ display: (aboutShow ? 'flex' : 'none') }}>
                     <h2>About</h2>
                     <p>Elevate your learning experience with our AI-powered MCQ practice platform. Our platform offers a wide range of subjects and topics, allowing you to customize your practice sessions to your specific needs. With our dynamic question generation and diverse practice modes, you can effectively prepare for exams and improve your understanding of the subject matter. Our platform provides a user-friendly interface and is accessible from any device, making it the perfect tool for students of all levels.</p>
+                    <p> Credits - <a href="https://www.flaticon.com/free-animated-icons/reading" title="reading animated icons" target="_blank">Reading animated icons created by Freepik - Flaticon</a></p>
                 </div>
                 <div className="options leaderboard normal_flex" style={{ display: (leaderboardShow ? 'flex' : 'none'), padding:'30px' }}>
                     <h2>Leaderboard</h2>
