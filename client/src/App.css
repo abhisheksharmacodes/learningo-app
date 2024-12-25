@@ -294,7 +294,7 @@ button:active {
   display: none;
 }
 
-nav ul li {
+ul li {
   display: inline;
   margin-left: 40px;
   list-style-type: none;

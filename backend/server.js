@@ -3,7 +3,7 @@ const cors = require('cors')
 const { MongoClient, ObjectId } = require('mongodb')
 
 const app = express()
-const port = 5000
+const port = 3000
 
 app.use(express.json())
 app.use(cors())
@@ -17,11 +17,11 @@ async function connect() {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        // console.log("Connected to MongoDB");
+        console.log("Connected to MongoDB");
         return cachedClient;
     } catch (e) {
         console.error(e);
-        throw e; // Re-throw to handle in the calling function
+        throw e;
     }
 }
 
@@ -40,14 +40,13 @@ app.post('/adduser', async (req, res) => {
 
         const result = await collection.insertOne(data)
         res.send(result.insertedId.toString())
-        // console.log("Inserted")
     } catch (e) {
         // console.log(e)
         res.status(500).json({ message: 'Error' })
     }
 })
 
-app.get('/niches/:id', async (req, res) => {
+app.get('/lg/:id', async (req, res) => {
     const id = req.params.id
     try {
         const client = await connect();
@@ -57,21 +56,23 @@ app.get('/niches/:id', async (req, res) => {
         const cursor = collection.find(query)
         const results = await cursor.toArray()
 
-        res.send(results[0].niches)
+        res.send(results[0].lg)
     } catch (e) {
         res.send(e)
     }
 })
 
-app.put('/niches/:id', async (req, res) => {
+app.put('/lg/:id', async (req, res) => {
     const id = req.params.id
-    const data = req.body
+    const data = req.body.lg
+
+    console.log(data)
 
     try {
         const client = await connect();
         const db = client.db("users");
         const collection = db.collection("users");
-        const updateResult = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { niches: data } })
+        const updateResult = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { lg: data } })
         if (updateResult.modifiedCount === 1) {
             res.send(true)
         } else {
@@ -100,12 +101,22 @@ app.get('/topics/:id', async (req, res) => {
     }
 })
 
+app.get("/leads",async (req,res)=>{
+    try {
+        const client = await connect();
+        const db = client.db("users");
+        const collection = db.collection("users");
+        const cursor = collection.find({}, { projection: { lg: 1, email: 1, fname: 1 } }).sort({ lg: -1 }).limit(10);
+        const results = await cursor.toArray()
+        res.send(results)
+    } catch (e) {
+        res.send(e)
+    }
+})
+
 app.put('/topics/:id', async (req, res) => {
     const id = req.params.id
     const data = req.body
-
-    // console.log(data)
-
     try {
         const client = await connect();
         const db = client.db("users");
@@ -120,7 +131,6 @@ app.put('/topics/:id', async (req, res) => {
         console.error(err)
         res.status(500)
     }
-
 })
 
 app.post('/login', async (req, res) => {
@@ -133,8 +143,6 @@ app.post('/login', async (req, res) => {
         const query = { email: email }
         const cursor = collection.find(query)
         const results = await cursor.toArray()
-
-        // console.log(results.length ? 'email found' : 'not found')
 
         if (results.length) {
             if (password === results[0].password) {
@@ -163,13 +171,13 @@ app.get('/user/:id', async (req, res) => {
         const query = { _id: new ObjectId(id) }
         const cursor = collection.find(query)
         const results = await cursor.toArray()
-        res.send(results[0].niches)
+        res.send(results[0].lg)
     } catch (e) {
         // console.log(e)
     }
 })
 
 app.listen(port, () => {
-    // console.log('Listening at port ' + port)
+    console.log('Listening at port ' + port)
 })
 

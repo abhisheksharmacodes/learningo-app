@@ -31,7 +31,7 @@ const Login = () => {
             email: user_email.current.value,
             password: pass.current.value
         }
-        axios.post('https://backend-tau-seven-71.vercel.app/login', user_data).then((data) => {
+        axios.post('http://localhost:3000/login', user_data).then((data) => {
             if (data.data == 'email') {
                 setError(true)
                 setErrorStatement('Email not found')
@@ -45,7 +45,7 @@ const Login = () => {
                 localStorage.setItem('name', data.data.fname)
                 localStorage.setItem('topics', data.data.topics)
                 // console.log(data.data.topics)
-                localStorage.setItem('lg', data.data.niches)
+                localStorage.setItem('lg', data.data.lg)
                 navigate('/dashboard')
             }
         })

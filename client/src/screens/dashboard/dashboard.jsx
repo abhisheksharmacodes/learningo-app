@@ -42,12 +42,13 @@ const Dashboard = () => {
     const [blurShow, setBlurShow] = useState(false)
     const [levelShow, setLevelShow] = useState(false)
     const [aboutShow, setAboutShow] = useState(false)
+    const [leaderboardShow, setLeaderboardShow] = useState(false)
     const [langShow, setLangShow] = useState(false)
     const [right, setRight] = useState(0)
+    const [leaderboard, setLeaderboard] = useState()
 
     const topic = useRef(null)
     const buttonRefs = useRef([]);
-    const langText = useRef('');
 
     const answer = useRef('');
 
@@ -353,6 +354,9 @@ const Dashboard = () => {
 
     useEffect(() => {
         checkStatus()
+        axios.get('http://localhost:3000/leads').then((data) => {
+            setLeaderboard(data.data)
+        })
     }, [])
 
     useEffect(() => {
@@ -393,7 +397,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         localStorage.setItem('topics', yourTopics.join(","))
-        axios.put('https://backend-tau-seven-71.vercel.app/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
+        axios.put('http://localhost:3000/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
             // // console.log('updated')
         })
     }, [yourTopics])
@@ -421,6 +425,7 @@ const Dashboard = () => {
         setLangShow(false)
         setAboutShow(false)
         setLevelShow(false)
+        setLeaderboardShow(false)
         setBlurShow(true)
     }
 
@@ -438,7 +443,7 @@ const Dashboard = () => {
             let new_lg = parseInt(localStorage.getItem('lg')) + new_points
             setLG(new_lg)
             localStorage.setItem('lg', new_lg.toString())
-            axios.put('https://backend-tau-seven-71.vercel.app/niches/' + localStorage.getItem('id'), [parseInt(new_lg)]).then(() => {
+            axios.put('http://localhost:3000/lg/' + localStorage.getItem('id'), {"lg":parseInt(new_lg)}).then(() => {
                 navigate('/dashboard')
             })
             generate()
@@ -491,6 +496,19 @@ const Dashboard = () => {
                 <div className="options about normal_flex" style={{ display: (aboutShow ? 'flex' : 'none') }}>
                     <h2>About</h2>
                     <p>Elevate your learning experience with our AI-powered MCQ practice platform. Our platform offers a wide range of subjects and topics, allowing you to customize your practice sessions to your specific needs. With our dynamic question generation and diverse practice modes, you can effectively prepare for exams and improve your understanding of the subject matter. Our platform provides a user-friendly interface and is accessible from any device, making it the perfect tool for students of all levels.</p>
+                </div>
+                <div className="options leaderboard normal_flex" style={{ display: (leaderboardShow ? 'flex' : 'none'), padding:'30px' }}>
+                    <h2>Leaderboard</h2>
+                    <ul id="leaderboard">
+                    {leaderboard && leaderboard.map((item)=>{
+                        return <li className={(item.email == localStorage.getItem('email') ? 'highlight' : '')} key={item.fname}>
+                            <span>
+                            {leaderboard.indexOf(item)+1}. &nbsp;
+                            {item.fname}</span>
+                            <div><img src={coin} alt="coin" style={{ height: '24px', marginRight: '7px' }} /> {item.lg}</div>
+                        </li>
+                    })}
+                    </ul>
                 </div>
                 <div className="options lang normal_flex" style={{ display: (langShow ? 'flex' : 'none') }}>
                     <h2>Choose your language</h2>
@@ -563,7 +581,7 @@ const Dashboard = () => {
                         </li>
                     </ul>
                 </nav>
-                <div className="normal_flex">
+                <div style={{cursor:'pointer'}} onClick={() => { initial(); setLeaderboardShow(true) }} className="normal_flex">
                     <img src={coin} alt="coin" style={{ height: '35px', marginRight: '10px' }} />
                     {LG}
                 </div>

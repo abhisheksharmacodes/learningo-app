@@ -108,10 +108,10 @@ const Signup = () => {
             fname: fname.current.value,
             email: user_email.current.value,
             password: pass.current.value,
-            niches: [0],
+            lg: 0,
             topics: []
         }
-        axios.post('https://backend-tau-seven-71.vercel.app/adduser', user_data).then((data) => {
+        axios.post('http://localhost:3000/adduser', user_data).then((data) => {
             localStorage.setItem('id', data.data)
             localStorage.setItem('loggedIn', 'true')
             localStorage.setItem('email', user_email.current.value)
