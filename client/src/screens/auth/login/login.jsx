@@ -31,7 +31,7 @@ const Login = () => {
             email: user_email.current.value,
             password: pass.current.value
         }
-        axios.post('http://localhost:3000/login', user_data).then((data) => {
+        axios.post('https://server-beige-beta.vercel.app/login', user_data).then((data) => {
             if (data.data == 'email') {
                 setError(true)
                 setErrorStatement('Email not found')
