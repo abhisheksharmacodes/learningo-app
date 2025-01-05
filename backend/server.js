@@ -13,7 +13,7 @@ let cachedClient = null;
 async function connect() {
     if (cachedClient) return cachedClient;
     try {
-        cachedClient = await MongoClient.connect('mongodb+srv://root:root@tasks.jrjhcnd.mongodb.net/?retryWrites=true&w=majority&appName=tasks', {
+        cachedClient = await MongoClient.connect('mongodb+srv://geekysharma31:eb1ro39Dc1lomf0u@cluster0.ofkby.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
