@@ -111,7 +111,7 @@ const Signup = () => {
             lg: 0,
             topics: []
         }
-        axios.post('https://server-beige-beta.vercel.app/adduser', user_data).then((data) => {
+        axios.post('https://backend-learningo-production.up.railway.app/adduser', user_data).then((data) => {
             localStorage.setItem('id', data.data)
             localStorage.setItem('loggedIn', 'true')
             localStorage.setItem('email', user_email.current.value)

@@ -354,7 +354,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         checkStatus()
-        axios.get('https://server-beige-beta.vercel.app/leads').then((data) => {
+        axios.get('https://backend-learningo-production.up.railway.app/leads').then((data) => {
             setLeaderboard(data.data)
         })
     }, [])
@@ -397,7 +397,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         localStorage.setItem('topics', yourTopics.join(","))
-        axios.put('https://server-beige-beta.vercel.app/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
+        axios.put('https://backend-learningo-production.up.railway.app/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
             // // console.log('updated')
         })
     }, [yourTopics])
@@ -443,7 +443,7 @@ const Dashboard = () => {
             let new_lg = parseInt(localStorage.getItem('lg')) + new_points
             setLG(new_lg)
             localStorage.setItem('lg', new_lg.toString())
-            axios.put('https://server-beige-beta.vercel.app/lg/' + localStorage.getItem('id'), {"lg":parseInt(new_lg)}).then(() => {
+            axios.put('https://backend-learningo-production.up.railway.app/lg/' + localStorage.getItem('id'), {"lg":parseInt(new_lg)}).then(() => {
                 navigate('/dashboard')
             })
             generate()
