@@ -46,6 +46,7 @@ const Dashboard = () => {
     const [langShow, setLangShow] = useState(false)
     const [right, setRight] = useState(0)
     const [leaderboard, setLeaderboard] = useState()
+    const [change,setChange] = useState(1)
 
     const topic = useRef(null)
     const buttonRefs = useRef([]);
@@ -354,10 +355,10 @@ const Dashboard = () => {
 
     useEffect(() => {
         checkStatus()
-        axios.get('https://backend-learningo-production.up.railway.app/leads').then((data) => {
+        axios.get('https://backend-tau-seven-71.vercel.app/leads').then((data) => {
             setLeaderboard(data.data)
         })
-    }, [])
+    }, [change])
 
     useEffect(() => {
         if (topics) {
@@ -397,8 +398,8 @@ const Dashboard = () => {
 
     useEffect(() => {
         localStorage.setItem('topics', yourTopics.join(","))
-        axios.put('https://backend-learningo-production.up.railway.app/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
-            // // console.log('updated')
+        axios.put('https://backend-tau-seven-71.vercel.app/topics/' + localStorage.getItem('id'), [yourTopics.join(",")]).then(() => {
+            
         })
     }, [yourTopics])
 
@@ -443,7 +444,7 @@ const Dashboard = () => {
             let new_lg = parseInt(localStorage.getItem('lg')) + new_points
             setLG(new_lg)
             localStorage.setItem('lg', new_lg.toString())
-            axios.put('https://backend-learningo-production.up.railway.app/lg/' + localStorage.getItem('id'), {"lg":parseInt(new_lg)}).then(() => {
+            axios.put('https://backend-tau-seven-71.vercel.app/lg/' + localStorage.getItem('id'), {"lg":parseInt(new_lg)}).then(() => {
                 navigate('/dashboard')
             })
             generate()
@@ -541,26 +542,6 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-            {/*<div id="min-nav">
-                <nav>
-                    <ul>
-                        <li onClick={() => { initial(); setLangShow(true) }}>
-                            <span className="langtext">{lang}</span>
-                            <img className="arrow" src={arrow} alt="" />
-                        </li>
-                        <li onClick={() => { initial(); setLevelShow(true) }}>
-                            {level}
-                            <img className="arrow" src={arrow} alt="" />
-                        </li>
-                        <li onClick={() => { initial(); setAboutShow(true) }}>
-                            About
-                        </li>
-                        <li onClick={() => { localStorage.clear(); navigate('/login') }}>
-                            Log out
-                        </li>
-                    </ul>
-                </nav>
-            </div>*/}
             <header className="flex header">
                 <img id="burger" src={menu} alt="burger" />
                 <img className="logo" src={logo} alt="logo" />
@@ -582,7 +563,7 @@ const Dashboard = () => {
                         </li>
                     </ul>
                 </nav>
-                <div style={{cursor:'pointer'}} onClick={() => { initial(); setLeaderboardShow(true) }} className="normal_flex">
+                <div style={{cursor:'pointer'}} onClick={() => { initial(); setLeaderboardShow(true); setChange(change+1) }} className="normal_flex">
                     <img src={coin} alt="coin" style={{ height: '35px', marginRight: '10px' }} />
                     {LG}
                 </div>
