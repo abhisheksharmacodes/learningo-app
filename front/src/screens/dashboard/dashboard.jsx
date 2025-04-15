@@ -2,7 +2,6 @@ import { React, useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
 import logo from '../../assets/images/logo1.png'
 import menu from '../../assets/images/menu.png'
 import arrow from '../../assets/images/arrow.svg'
