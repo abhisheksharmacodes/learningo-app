@@ -311,7 +311,7 @@ const Dashboard = () => {
         try {
             const googleAI = new GoogleGenerativeAI(API_KEY)
             const geminiModel = googleAI.getGenerativeModel({
-                model: "gemini-pro",
+                model: "gemini-2.0-flash",
                 geminiConfig,
             });
 
@@ -457,7 +457,7 @@ const Dashboard = () => {
     const handleCheckTopic = async (checkTopic) => {
         const googleAI = new GoogleGenerativeAI(API_KEY)
         const geminiModel = googleAI.getGenerativeModel({
-            model: "gemini-pro",
+            model: "gemini-2.0-flash",
             geminiConfig,
         });
         const prompt = `it is a sentence "${checkTopic}". output true if 1. if it is  2. it is appropriate and doesn't contain bad words. otherwise false. just output true or false`;
